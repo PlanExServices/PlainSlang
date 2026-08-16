@@ -1,0 +1,19 @@
+# dependencies
+/node_modules
+
+# next.js build output
+/.next
+/out
+
+# runtime database (auto-seeded on first request — see lib/db.js)
+/data/*.db
+/data/*.db-shm
+/data/*.db-wal
+
+# env files
+.env*
+
+# misc
+.DS_Store
+npm-debug.log*
+*.tsbuildinfo
