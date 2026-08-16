@@ -1,287 +1,88 @@
-'use client';
+// Pack expansion v2 — more texting, gaming, and coding terms.
+// Every entry cites a published reference (Wiktionary entries verified via the
+// MediaWiki API on 2026-08-15; Wikipedia glossary/article pages). No invented meanings.
 
-import { useEffect, useState, useCallback } from 'react';
-import Link from 'next/link';
-import AppHeader from '@/components/AppHeader';
-import { AGE_GROUPS, ageGroupInfo, difficultyInfo } from '@/lib/constants';
-import { CATEGORIES } from '@/lib/packs';
-import { getSavedIds } from '@/lib/local';
+const WIKT = (w) => ({
+  sourceName: `Wiktionary — ${w}`,
+  sourceUrl: `https://en.wiktionary.org/wiki/${encodeURIComponent(w)}`,
+});
+const WIKI = (title, page) => ({
+  sourceName: `Wikipedia — ${title}`,
+  sourceUrl: `https://en.wikipedia.org/wiki/${page}`,
+});
+const VG = WIKI('Glossary of video game terms', 'Glossary_of_video_game_terms');
 
-const AGE_COLORS = {
-  elementary: '#4ade80',
-  middle: '#22d3ee',
-  high_school: '#a78bfa',
-  college: '#f472b6',
-  gen_alpha: '#fbbf24',
-  gen_z: '#f87171',
-};
+export const PACK_TERMS_V2 = [
+  // ---------------- TEXTING (27 new) ----------------
+  { category: 'texting', term: 'OMG', emoji: '😱', difficulty: 'easy', definition: 'Oh my God/gosh. Surprise, excitement, or horror — the all-purpose exclamation.', example: '“omg did you see who just walked in”', tags: ['acronym', 'classic'], ...WIKT('omg') },
+  { category: 'texting', term: 'LMAO', emoji: '🤣', difficulty: 'easy', definition: 'Laughing my a** off. One notch stronger than LOL.', example: '“he tripped over the cat lmao”', tags: ['acronym', 'reaction'], ...WIKT('lmao') },
+  { category: 'texting', term: 'BTW', emoji: '💡', difficulty: 'easy', definition: 'By the way. Introduces a side note.', example: '“btw practice moved to 6.”', tags: ['acronym'], ...WIKT('btw') },
+  { category: 'texting', term: 'FYI', emoji: '📌', difficulty: 'easy', definition: 'For your information. Sharing something you should know — sometimes passive-aggressively.', example: '“fyi the wifi password changed.”', tags: ['acronym'], ...WIKT('fyi') },
+  { category: 'texting', term: 'NVM', emoji: '🙃', difficulty: 'easy', definition: 'Never mind. Retracting or dropping the previous message.', example: '“where are my keys? nvm found them.”', tags: ['acronym'], ...WIKT('nvm') },
+  { category: 'texting', term: 'JK', emoji: '😜', difficulty: 'easy', definition: 'Just kidding. Marks the previous message as a joke.', example: '“I sold your PS5. jk.”', tags: ['acronym', 'humor'], ...WIKT('jk') },
+  { category: 'texting', term: 'RN', emoji: '⏰', difficulty: 'easy', definition: 'Right now.', example: '“I can’t talk rn, in class.”', tags: ['acronym', 'time'], ...WIKT('rn') },
+  { category: 'texting', term: 'IRL', emoji: '🌳', difficulty: 'easy', definition: 'In real life — offline, as opposed to on the internet.', example: '“We finally met irl after two years of gaming together.”', tags: ['acronym', 'internet'], ...WIKT('irl') },
+  { category: 'texting', term: 'POV', emoji: '🎥', difficulty: 'medium', definition: 'Point of view. On social media it captions a video showing a scene “from your perspective” — often used loosely for any relatable scenario.', example: '“POV: you’re the last one picked in gym class.”', tags: ['acronym', 'tiktok'], ...WIKT('pov') },
+  { category: 'texting', term: 'TTYL', emoji: '👋', difficulty: 'easy', definition: 'Talk to you later.', example: '“gtg, ttyl!”', tags: ['acronym', 'classic'], ...WIKT('ttyl') },
+  { category: 'texting', term: 'OMW', emoji: '🚗', difficulty: 'easy', definition: 'On my way. Sometimes sent before actually leaving.', example: '“omw, be there in 10.”', tags: ['acronym'], ...WIKT('omw') },
+  { category: 'texting', term: 'WYA', emoji: '📍', difficulty: 'easy', definition: 'Where you at? Asking someone’s location.', example: '“wya? we’re by the food court.”', tags: ['acronym', 'location'], ...WIKT('wya') },
+  { category: 'texting', term: 'WBU', emoji: '🔁', difficulty: 'easy', definition: 'What about you? Bouncing the question back.', example: '“I’m good, wbu?”', tags: ['acronym'], ...WIKT('wbu') },
+  { category: 'texting', term: 'HBU', emoji: '🔄', difficulty: 'easy', definition: 'How about you? Interchangeable with WBU.', example: '“pizza works for me, hbu?”', tags: ['acronym'], ...WIKT('hbu') },
+  { category: 'texting', term: 'ILY', emoji: '❤️', difficulty: 'easy', definition: 'I love you. Between friends as much as romance.', example: '“thanks for covering for me, ily.”', tags: ['acronym', 'affection'], ...WIKT('ily') },
+  { category: 'texting', term: 'IDC', emoji: '😶', difficulty: 'easy', definition: 'I don’t care. Can be genuine indifference or a brush-off.', example: '“wear whatever, idc.”', tags: ['acronym'], ...WIKT('idc') },
+  { category: 'texting', term: 'TMI', emoji: '🙈', difficulty: 'easy', definition: 'Too much information. You’ve overshared.', example: '“I did NOT need to hear that. tmi.”', tags: ['acronym', 'reaction'], ...WIKT('tmi') },
+  { category: 'texting', term: 'FWIW', emoji: '🤏', difficulty: 'medium', definition: 'For what it’s worth. Softens an opinion or minor contribution.', example: '“fwiw I thought your speech was great.”', tags: ['acronym', 'opinion'], ...WIKT('fwiw') },
+  { category: 'texting', term: 'IIRC', emoji: '🧠', difficulty: 'medium', definition: 'If I recall correctly. Hedges a statement from memory.', example: '“iirc the deadline is Friday.”', tags: ['acronym', 'hedge'], ...WIKT('IIRC') },
+  { category: 'texting', term: 'AFAIK', emoji: '🤔', difficulty: 'medium', definition: 'As far as I know. Another hedge — true to my knowledge.', example: '“afaik the trip is still on.”', tags: ['acronym', 'hedge'], ...WIKT('afaik') },
+  { category: 'texting', term: 'TBF', emoji: '⚖️', difficulty: 'easy', definition: 'To be fair. Adds nuance or gives credit before/after criticism.', example: '“tbf he did apologize right away.”', tags: ['acronym', 'opinion'], ...WIKT('tbf') },
+  { category: 'texting', term: 'OFC', emoji: '👍', difficulty: 'easy', definition: 'Of course.', example: '“can you pick me up?” “ofc.”', tags: ['acronym', 'agreement'], ...WIKT('ofc') },
+  { category: 'texting', term: 'NP', emoji: '🆗', difficulty: 'easy', definition: 'No problem. Response to thanks.', example: '“thx for the notes!” “np.”', tags: ['acronym'], ...WIKT('np') },
+  { category: 'texting', term: 'TFW', emoji: '😩', difficulty: 'medium', definition: 'That feeling when. Captions a relatable emotional moment, often with an image.', example: '“tfw the vending machine eats your dollar.”', tags: ['acronym', 'meme'], ...WIKT('tfw') },
+  { category: 'texting', term: 'ONG', emoji: '🙏', difficulty: 'medium', definition: 'On God. Swearing something is true — a stronger “fr.”', example: '“that test was impossible ong.”', tags: ['acronym', 'emphasis'], ...WIKT('ong') },
+  { category: 'texting', term: 'PMO', emoji: '😒', difficulty: 'hard', definition: 'Piss(es) me off. Venting annoyance. (In some circles also “put me on” = recommend me something — context matters.)', example: '“slow walkers in the hallway pmo.”', tags: ['acronym', 'venting'], ...WIKT('pmo') },
+  { category: 'texting', term: 'OTP', emoji: '💞', difficulty: 'hard', definition: 'One true pairing — the fictional (or real) couple you root for above all others. Fandom language. Older texters may also mean “on the phone.”', example: '“Those two characters are my otp, don’t argue.”', tags: ['acronym', 'fandom'], ...WIKT('OTP') },
 
-const DIFF_COLORS = { easy: '#4ade80', medium: '#fbbf24', hard: '#f87171' };
-const DIFF_LABELS = { easy: 'Easy', medium: 'Medium', hard: 'Cryptic' };
+  // ---------------- GAMING (20 new) ----------------
+  { category: 'gaming', term: 'gank', emoji: '🗡️', difficulty: 'hard', definition: 'Ambushing an opponent with surprise or superior numbers — often roaming from another lane to jump someone.', example: '“Their jungler keeps ganking mid.”', tags: ['strategy', 'moba'], ...WIKT('gank') },
+  { category: 'gaming', term: 'kiting', emoji: '🪁', difficulty: 'hard', definition: 'Keeping an enemy at a distance — hitting while retreating so it chases you like a kite on a string but never lands a hit.', example: '“Kite the boss around the pillar while we heal.”', tags: ['strategy', 'mmo'], ...WIKT('kiting') },
+  { category: 'gaming', term: 'cheese', emoji: '🧀', difficulty: 'medium', definition: 'Winning through a cheap, unintended, or low-effort tactic instead of “fair” skill.', example: '“He cheesed the boss by standing where its attacks can’t reach.”', tags: ['strategy', 'teasing'], ...WIKT('cheese') },
+  { category: 'gaming', term: 'git gud', emoji: '🥋', difficulty: 'medium', definition: 'Deliberately misspelled “get good” — the community’s tough-love (or mocking) response to complaints about difficulty.', example: '“The boss is unfair!” “git gud.”', tags: ['teasing', 'meme'], ...WIKT('git gud') },
+  { category: 'gaming', term: 'skill issue', emoji: '🤷', difficulty: 'medium', definition: 'The modern “git gud”: implying the problem isn’t the game, it’s you.', example: '“I keep falling off the map.” “Sounds like a skill issue.”', tags: ['teasing', 'meme'], ...WIKT('skill issue') },
+  { category: 'gaming', term: 'pwned', emoji: '💀', difficulty: 'medium', definition: 'Utterly defeated (from a typo of “owned”). Dated but still understood everywhere.', example: '“Got pwned in that 1v1.”', tags: ['classic', 'teasing'], ...WIKT('pwned') },
+  { category: 'gaming', term: 'frag', emoji: '💥', difficulty: 'medium', definition: 'A kill in a shooter. “Top fragger” = the player with the most kills.', example: '“She’s top fragging with 30 kills.”', tags: ['fps'], ...WIKT('frag') },
+  { category: 'gaming', term: 'camping', emoji: '⛺', difficulty: 'easy', definition: 'Staying in one hidden spot and ambushing everyone who walks by. Effective; universally resented.', example: '“He camped the stairs all match.”', tags: ['fps', 'behavior'], ...WIKT('camping') },
+  { category: 'gaming', term: 'wallhack', emoji: '🧱', difficulty: 'medium', definition: 'A cheat that lets a player see through walls. Suspiciously good tracking gets accused of it constantly.', example: '“How did he know I was there?? Wallhacks.”', tags: ['cheating'], ...WIKT('wallhack') },
+  { category: 'gaming', term: 'aimbot', emoji: '🎯', difficulty: 'medium', definition: 'A cheat that aims automatically. Also a (semi-)compliment for inhumanly accurate players.', example: '“That flick was straight aimbot.”', tags: ['cheating', 'praise'], ...WIKT('aimbot') },
+  { category: 'gaming', term: 'speedrun', emoji: '⏱️', difficulty: 'easy', definition: 'Beating a game as fast as possible, often with glitches and deep route knowledge. Also used jokingly for rushing anything.', example: '“He speedran his homework in 20 minutes.”', tags: ['competitive'], ...WIKT('speedrun') },
+  { category: 'gaming', term: 'tryhard', emoji: '😤', difficulty: 'easy', definition: 'Someone playing at maximum sweatiness in a casual setting. Mild insult with a hint of respect.', example: '“It’s a party mode, why are you tryharding?”', tags: ['teasing'], ...WIKT('tryhard') },
+  { category: 'gaming', term: 'sweaty', emoji: '💦', difficulty: 'medium', definition: 'Extremely intense, competitive play (or player) — as in literally sweating over a casual match.', example: '“The lobby got sweaty after 10pm.”', tags: ['competitive', 'teasing'], ...WIKT('sweaty') },
+  { category: 'gaming', term: 'DPS', emoji: '⚡', difficulty: 'medium', definition: 'Damage per second — both the stat and the team role whose whole job is dealing damage (vs. tank and healer).', example: '“We have two healers, we need more DPS.”', tags: ['acronym', 'roles', 'mmo'], ...VG },
+  { category: 'gaming', term: 'hitbox', emoji: '📦', difficulty: 'medium', definition: 'The invisible shape the game uses to decide whether an attack connects. When it’s bigger or smaller than the character looks, players riot.', example: '“I dodged that! The hitbox is broken.”', tags: ['mechanics'], ...VG },
+  { category: 'gaming', term: 'meta', emoji: '📊', difficulty: 'medium', definition: 'The current “best” strategies, characters, or loadouts the community has settled on. Playing “off-meta” means ignoring them.', example: '“Snipers are meta this season.”', tags: ['strategy', 'competitive'], ...VG },
+  { category: 'gaming', term: 'RNG', emoji: '🎲', difficulty: 'medium', definition: 'Random number generation — luck, as a game mechanic. “RNG carried me” = I got lucky; “RNGesus” = the deity of drop rates.', example: '“The loot is pure RNG.”', tags: ['acronym', 'mechanics'], ...VG },
+  { category: 'gaming', term: 'DLC', emoji: '📥', difficulty: 'easy', definition: 'Downloadable content — extra maps, characters, or story sold after the base game.', example: '“The DLC costs almost as much as the game.”', tags: ['acronym', 'business'], ...VG },
+  { category: 'gaming', term: 'mob', emoji: '👾', difficulty: 'medium', definition: 'Any computer-controlled enemy that exists to be fought — short for “mobile object.” Bosses are mobs with an ego.', example: '“Clear the mobs before pulling the boss.”', tags: ['mmo', 'mechanics'], ...VG },
+  { category: 'gaming', term: 'griefing', emoji: '😈', difficulty: 'medium', definition: 'Deliberately ruining other players’ fun within the game’s rules — destroying their builds, blocking doorways, team-killing.', example: '“Someone griefed our base while we were offline.”', tags: ['behavior', 'toxicity'], ...VG },
 
-function parentScore(pct) {
-  if (pct >= 80) return { title: 'Certified Rizzler 😎', blurb: 'You could pass as a group-chat member.' };
-  if (pct >= 60) return { title: 'Pretty Based 👌', blurb: 'The kids might actually be impressed.' };
-  if (pct >= 40) return { title: 'Mid… no cap 😬', blurb: 'Respectable, but keep studying.' };
-  if (pct >= 1) return { title: 'Kinda Cheugy 🧀', blurb: 'It\u2019s giving "how do you do, fellow kids."' };
-  return { title: 'NPC Energy 🤖', blurb: 'Time to hit the glossary.' };
-}
-
-export default function DashboardPage() {
-  const [stats, setStats] = useState(null);
-  const [error, setError] = useState(null);
-  const [savedCount, setSavedCount] = useState(0);
-
-  // Quiz state
-  const [quiz, setQuiz] = useState(null);
-  const [quizError, setQuizError] = useState(null);
-  const [picked, setPicked] = useState(null);
-  const [score, setScore] = useState({ right: 0, total: 0 });
-  const [loadingQuiz, setLoadingQuiz] = useState(false);
-
-  const loadStats = useCallback(async () => {
-    setError(null);
-    try {
-      const res = await fetch('/api/stats', { cache: 'no-store' });
-      if (!res.ok) throw new Error(`Server returned ${res.status}`);
-      setStats(await res.json());
-    } catch (e) {
-      setError(String(e.message || e));
-    }
-  }, []);
-
-  const loadQuiz = useCallback(async () => {
-    setLoadingQuiz(true);
-    setQuizError(null);
-    setPicked(null);
-    try {
-      const res = await fetch('/api/quiz', { cache: 'no-store' });
-      if (!res.ok) throw new Error(`Server returned ${res.status}`);
-      setQuiz(await res.json());
-    } catch (e) {
-      setQuizError(String(e.message || e));
-    } finally {
-      setLoadingQuiz(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    loadStats();
-    loadQuiz();
-    setSavedCount(getSavedIds().length);
-  }, [loadStats, loadQuiz]);
-
-  const handlePick = (id) => {
-    if (picked !== null) return;
-    setPicked(id);
-    setScore((s) => ({ right: s.right + (id === quiz.correctId ? 1 : 0), total: s.total + 1 }));
-  };
-
-  const pct = score.total ? Math.round((score.right / score.total) * 100) : 0;
-  const rank = parentScore(pct);
-  const maxAge = stats ? Math.max(...stats.byAge.map((a) => a.c), 1) : 1;
-  const sotd = stats?.slangOfTheDay;
-
-  return (
-    <>
-      <AppHeader subtitle="Know what your kids mean." />
-      <main className="page-body">
-        {error && (
-          <div className="error-box" role="alert">
-            Couldn’t load stats: {error}
-            <div style={{ marginTop: 8 }}>
-              <button className="btn small" onClick={loadStats}>↻ Retry</button>
-            </div>
-          </div>
-        )}
-
-        {!stats && !error && (
-          <>
-            <div className="stat-grid" aria-hidden="true">
-              {[...Array(4)].map((_, i) => <div key={i} className="skeleton" style={{ height: 84 }} />)}
-            </div>
-            <div className="skeleton" style={{ height: 160, marginTop: 12 }} />
-            <div className="skeleton" style={{ height: 220, marginTop: 12 }} />
-          </>
-        )}
-
-        {stats && (
-          <>
-            {/* ----- Stat tiles ----- */}
-            <div className="stat-grid">
-              <Link href="/glossary" className="stat-tile" style={{ '--tile': '#a78bfa' }}>
-                <span className="stat-num">{stats.total}</span>
-                <span className="stat-label">📖 Terms decoded</span>
-              </Link>
-              <Link href="/trending" className="stat-tile" style={{ '--tile': '#f472b6' }}>
-                <span className="stat-num">{stats.trending}</span>
-                <span className="stat-label">🔥 Trending now</span>
-              </Link>
-              <Link href="/saved" className="stat-tile" style={{ '--tile': '#fbbf24' }}>
-                <span className="stat-num">{savedCount}</span>
-                <span className="stat-label">🔖 Saved by you</span>
-              </Link>
-              <Link href="/add" className="stat-tile" style={{ '--tile': '#4ade80' }}>
-                <span className="stat-num">{stats.custom}</span>
-                <span className="stat-label">✍️ Added by you</span>
-              </Link>
-            </div>
-
-            {/* ----- Slang of the Day ----- */}
-            {sotd && (
-              <Link href={`/term/${sotd.id}`} className="sotd-card">
-                <div className="sotd-kicker">✨ Slang of the Day</div>
-                <div className="sotd-term">
-                  <span aria-hidden="true">{sotd.emoji || '💬'}</span> {sotd.term}
-                </div>
-                <p className="sotd-def">{sotd.definition}</p>
-                {sotd.example && <p className="sotd-example">“{sotd.example}”</p>}
-                <span className="sotd-cta">Read the full entry →</span>
-              </Link>
-            )}
-
-            {/* ----- Explore teaser ----- */}
-            <Link href="/explore" className="explore-teaser">
-              <div className="explore-teaser-title">🧭 Explore other jargon worlds</div>
-              <div className="explore-teaser-sub">
-                Coding, texting, gaming, corporate — every dialect, decoded.
-              </div>
-              <div className="explore-teaser-row" aria-hidden="true">
-                {CATEGORIES.filter((c) => c.id !== 'teen').map((c) => (
-                  <span key={c.id} className="explore-mini">
-                    <span className="mini-emoji">{c.emoji}</span>
-                    {c.label.split(' ')[0]}
-                  </span>
-                ))}
-              </div>
-            </Link>
-
-            {/* ----- Quiz ----- */}
-            <section className="section-card quiz-card">
-              <h3 className="section-label">🎯 Do you speak teen? — pop quiz</h3>
-              {quizError && (
-                <div className="error-box" role="alert" style={{ marginTop: 8 }}>
-                  {quizError}
-                  <div style={{ marginTop: 8 }}>
-                    <button className="btn small" onClick={loadQuiz}>↻ Retry</button>
-                  </div>
-                </div>
-              )}
-              {!quiz && !quizError && <div className="skeleton" style={{ height: 150 }} aria-busy="true" />}
-              {quiz && (
-                <>
-                  <p className="quiz-question">
-                    What does <strong>{quiz.question.emoji} “{quiz.question.term}”</strong> mean?
-                  </p>
-                  <div className="quiz-options" role="group" aria-label="Quiz answers">
-                    {quiz.options.map((o) => {
-                      let cls = 'quiz-option';
-                      if (picked !== null) {
-                        if (o.id === quiz.correctId) cls += ' correct';
-                        else if (o.id === picked) cls += ' wrong';
-                        else cls += ' faded';
-                      }
-                      return (
-                        <button key={o.id} className={cls} onClick={() => handlePick(o.id)} disabled={picked !== null}>
-                          {o.definition}
-                        </button>
-                      );
-                    })}
-                  </div>
-                  {picked !== null && (
-                    <div className="quiz-result" role="status">
-                      {picked === quiz.correctId ? (
-                        <span className="source-ok">✓ Correct — ate, no crumbs.</span>
-                      ) : (
-                        <span className="source-fail">✕ Not quite — that’s cap.</span>
-                      )}
-                      <button className="btn small primary" onClick={loadQuiz} disabled={loadingQuiz}>
-                        {loadingQuiz ? '…' : 'Next question →'}
-                      </button>
-                    </div>
-                  )}
-                  {score.total > 0 && (
-                    <div className="quiz-score">
-                      <div className="quiz-score-bar" aria-hidden="true">
-                        <div className="quiz-score-fill" style={{ width: `${pct}%` }} />
-                      </div>
-                      <div className="quiz-score-line">
-                        {score.right}/{score.total} correct · <strong>{rank.title}</strong>
-                        <span className="quiz-score-blurb"> {rank.blurb}</span>
-                      </div>
-                    </div>
-                  )}
-                </>
-              )}
-            </section>
-
-            {/* ----- Age group chart ----- */}
-            <section className="section-card">
-              <h3 className="section-label">👪 Who says what — terms by age group</h3>
-              <div className="bar-chart">
-                {AGE_GROUPS.map((g) => {
-                  const row = stats.byAge.find((a) => a.g === g.id);
-                  const count = row ? row.c : 0;
-                  return (
-                    <Link key={g.id} href={`/glossary?age=${g.id}`} className="bar-row" aria-label={`${g.label}: ${count} terms — view them`}>
-                      <span className="bar-name">{g.emoji} {g.label}</span>
-                      <span className="bar-track">
-                        <span
-                          className="bar-fill"
-                          style={{ width: `${Math.max((count / maxAge) * 100, 4)}%`, background: AGE_COLORS[g.id] }}
-                        />
-                      </span>
-                      <span className="bar-count">{count}</span>
-                    </Link>
-                  );
-                })}
-              </div>
-            </section>
-
-            {/* ----- Difficulty donut-ish ----- */}
-            <section className="section-card">
-              <h3 className="section-label">🧩 How cryptic is it out there?</h3>
-              <div className="diff-strip" aria-hidden="true">
-                {stats.byDifficulty.map((d) => (
-                  <span
-                    key={d.d}
-                    className="diff-seg"
-                    style={{ flex: d.c, background: DIFF_COLORS[d.d] || '#666' }}
-                  />
-                ))}
-              </div>
-              <div className="diff-legend">
-                {['easy', 'medium', 'hard'].map((k) => {
-                  const row = stats.byDifficulty.find((d) => d.d === k);
-                  return (
-                    <span key={k} className="diff-key">
-                      <span className="diff-dot" style={{ background: DIFF_COLORS[k] }} aria-hidden="true" />
-                      {DIFF_LABELS[k]} · {row ? row.c : 0}
-                    </span>
-                  );
-                })}
-              </div>
-              <p className="form-hint" style={{ marginTop: 8 }}>
-                “Cryptic” = you would never guess it from context. Looking at you, “6-7.”
-              </p>
-            </section>
-
-            {/* ----- Newest community terms ----- */}
-            {stats.newestCustom.length > 0 && (
-              <section className="section-card">
-                <h3 className="section-label">🆕 Freshly added by you</h3>
-                {stats.newestCustom.map((t) => (
-                  <Link key={t.id} href={`/term/${t.id}`} className="fresh-row">
-                    <span aria-hidden="true">{t.emoji || '💬'}</span>
-                    <span className="fresh-term">{t.term}</span>
-                    <span className="fresh-age">{ageGroupInfo(t.ageGroup).label}</span>
-                  </Link>
-                ))}
-              </section>
-            )}
-          </>
-        )}
-      </main>
-    </>
-  );
-}
+  // ---------------- CODING (20 new) ----------------
+  { category: 'coding', term: 'grok', emoji: '🌊', difficulty: 'medium', definition: 'To understand something so deeply it becomes intuitive. From Heinlein’s “Stranger in a Strange Land,” adopted by hackers.', example: '“Give me a week with the codebase and I’ll grok it.”', tags: ['understanding'], ...WIKT('grok') },
+  { category: 'coding', term: 'footgun', emoji: '🔫', difficulty: 'hard', definition: 'A feature that makes it easy to shoot yourself in the foot — dangerous by design.', example: '“Editing production configs by hand is a classic footgun.”', tags: ['design', 'danger'], ...WIKT('footgun') },
+  { category: 'coding', term: 'bug', emoji: '🐛', difficulty: 'easy', definition: 'An error in software that makes it behave incorrectly. Famously linked to an actual moth found in a 1947 Harvard computer.', example: '“It’s not a bug, it’s a feature.”', tags: ['classic', 'debugging'], ...WIKI('Software bug', 'Software_bug') },
+  { category: 'coding', term: 'edge case', emoji: '🧊', difficulty: 'medium', definition: 'A problem that only appears at extreme or unusual inputs — the empty list, the year 2038, the user named “Null.”', example: '“Works fine until someone’s name has an apostrophe. Edge case.”', tags: ['testing'], ...WIKI('Edge case', 'Edge_case') },
+  { category: 'coding', term: 'race condition', emoji: '🏁', difficulty: 'hard', definition: 'A bug where the outcome depends on which of two operations happens to finish first. Notoriously hard to reproduce.', example: '“It only fails under load — smells like a race condition.”', tags: ['concurrency', 'debugging'], ...WIKI('Race condition', 'Race_condition') },
+  { category: 'coding', term: 'memory leak', emoji: '🚰', difficulty: 'medium', definition: 'When a program keeps claiming memory and never gives it back, slowly eating the machine until something crashes.', example: '“The server needs a restart every night — there’s a leak somewhere.”', tags: ['debugging', 'performance'], ...WIKI('Memory leak', 'Memory_leak') },
+  { category: 'coding', term: 'refactoring', emoji: '🧹', difficulty: 'medium', definition: 'Restructuring code to make it cleaner without changing what it does. Like reorganizing the kitchen: same meals, saner drawers.', example: '“I refactored the auth module — same behavior, half the code.”', tags: ['code-quality'], ...WIKI('Code refactoring', 'Code_refactoring') },
+  { category: 'coding', term: 'boilerplate', emoji: '📋', difficulty: 'medium', definition: 'Repetitive setup code you must write over and over with little variation before the interesting part starts.', example: '“Half the file is just boilerplate imports and config.”', tags: ['code-quality'], ...WIKI('Boilerplate code', 'Boilerplate_code') },
+  { category: 'coding', term: 'legacy code', emoji: '🏚️', difficulty: 'easy', definition: 'Old code the business still depends on but everyone is afraid to touch. Often works perfectly; nobody knows why.', example: '“Payroll runs on legacy code from 2009.”', tags: ['maintenance'], ...WIKI('Legacy system', 'Legacy_system') },
+  { category: 'coding', term: 'stack trace', emoji: '🧾', difficulty: 'medium', definition: 'The list of function calls a program prints when it crashes — the breadcrumb trail back to what went wrong.', example: '“Don’t describe the error, paste the stack trace.”', tags: ['debugging'], ...WIKI('Stack trace', 'Stack_trace') },
+  { category: 'coding', term: 'merge conflict', emoji: '⚔️', difficulty: 'medium', definition: 'When two people edit the same lines and version control makes a human decide whose change wins. A rite of passage.', example: '“I lost the afternoon to a 40-file merge conflict.”', tags: ['git', 'collaboration'], ...WIKI('Merge (version control)', 'Merge_(version_control)') },
+  { category: 'coding', term: 'cargo cult programming', emoji: '🛩️', difficulty: 'hard', definition: 'Copying code or rituals without understanding why they work, hoping the results follow anyway.', example: '“Nobody knows what that config line does; we keep it out of cargo cult.”', tags: ['anti-pattern'], ...WIKI('Cargo cult programming', 'Cargo_cult_programming') },
+  { category: 'coding', term: 'off-by-one error', emoji: '1️⃣', difficulty: 'medium', definition: 'Counting one too many or one too few — the classic loop bug. The two hardest problems in CS: naming, caching, and off-by-one errors.', example: '“The list shows 9 items instead of 10 — off-by-one.”', tags: ['debugging', 'classic'], ...WIKI('Off-by-one error', 'Off-by-one_error') },
+  { category: 'coding', term: 'code golf', emoji: '⛳', difficulty: 'medium', definition: 'Solving a problem in the fewest possible characters, readability be damned. A sport, not a workplace practice.', example: '“He code-golfed it down to 38 characters. Nobody can read it.”', tags: ['fun'], ...WIKI('Code golf', 'Code_golf') },
+  { category: 'coding', term: 'kludge', emoji: '🩹', difficulty: 'hard', definition: 'An inelegant, duct-taped workaround that gets the job done. Pronounced “klooj.”', example: '“The timezone fix is a kludge, but it ships today.”', tags: ['workaround'], ...WIKI('Kludge', 'Kludge') },
+  { category: 'coding', term: 'bit rot', emoji: '🦠', difficulty: 'hard', definition: 'The way untouched software mysteriously stops working over time as everything around it changes.', example: '“The deploy script hit bit rot — three of its dependencies died.”', tags: ['maintenance'], ...WIKI('Software rot', 'Software_rot') },
+  { category: 'coding', term: 'linter', emoji: '🧴', difficulty: 'medium', definition: 'A tool that nags about code style and suspicious patterns before they become bugs. Named after picking lint off clothes.', example: '“CI failed because the linter hates my semicolons.”', tags: ['tooling'], ...WIKI('Lint (software)', 'Lint_(software)') },
+  { category: 'coding', term: 'monkey patch', emoji: '🐒', difficulty: 'hard', definition: 'Modifying someone else’s code at runtime without touching the source. Powerful, fragile, and frowned upon.', example: '“We monkey-patched the library until the fix ships upstream.”', tags: ['technique', 'danger'], ...WIKI('Monkey patch', 'Monkey_patch') },
+  { category: 'coding', term: 'god object', emoji: '👁️', difficulty: 'hard', definition: 'One class that knows about everything and does everything. The opposite of good design; every codebase has one.', example: '“The User class is 4,000 lines. Total god object.”', tags: ['anti-pattern'], ...WIKI('God object', 'God_object') },
+  { category: 'coding', term: 'rabbit hole', emoji: '🕳️', difficulty: 'easy', definition: 'A problem that keeps revealing deeper problems the further you dig. You go in to fix a typo, you emerge three days later.', example: '“The ‘quick fix’ turned into a rabbit hole.”', tags: ['workflow'], ...WIKT('rabbit hole') },
+];

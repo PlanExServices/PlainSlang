@@ -1,95 +1,109 @@
-'use client';
+// Pack expansion v4 — exhaustive-library push, round two.
+// All Wiktionary titles verified via the MediaWiki API on 2026-08-15.
+// Wikipedia pages verified with HTTP 200. No invented meanings.
 
-import { useEffect, useState, useCallback } from 'react';
-import Link from 'next/link';
-import AppHeader from '@/components/AppHeader';
-import TermCard from '@/components/TermCard';
-import { getSavedIds, getNote } from '@/lib/local';
+const WIKT = (w) => ({
+  sourceName: `Wiktionary — ${w}`,
+  sourceUrl: `https://en.wiktionary.org/wiki/${encodeURIComponent(w)}`,
+});
+const WIKI = (title, page) => ({
+  sourceName: `Wikipedia — ${title}`,
+  sourceUrl: `https://en.wikipedia.org/wiki/${page}`,
+});
+const VG = WIKI('Glossary of video game terms', 'Glossary_of_video_game_terms');
 
-export default function SavedPage() {
-  const [terms, setTerms] = useState(null);
-  const [error, setError] = useState(null);
-  const [notes, setNotes] = useState({});
+export const PACK_TERMS_V4 = [
+  // ---------------- TEEN (15 new) ----------------
+  { category: 'teen', term: 'bffr', emoji: '🙄', ageGroup: 'high_school', difficulty: 'medium', related: ['texting'], definition: 'Be f***ing for real. Exasperated “you can’t be serious.” Softened aloud to “be for real.”', example: '“You lost the permission slip again? bffr.”', tags: ['acronym', 'exasperation'], ...WIKT('bffr') },
+  { category: 'teen', term: 'clapback', emoji: '👏', ageGroup: 'high_school', difficulty: 'easy', related: ['texting'], definition: 'A sharp, witty comeback to criticism — quick and public.', example: '“Her clapback in the comments ended him.”', tags: ['comeback', 'social-media'], ...WIKT('clapback') },
+  { category: 'teen', term: 'dank', emoji: '🍄', ageGroup: 'high_school', difficulty: 'medium', definition: 'Excellent — especially of memes: absurd, layered, deep-internet humor. Originally cannabis slang, now mostly about memes.', example: '“He only posts dank memes from 2019.”', tags: ['memes', 'internet'], ...WIKT('dank') },
+  { category: 'teen', term: 'era', emoji: '🎤', ageGroup: 'high_school', difficulty: 'easy', definition: 'A self-declared life phase, Taylor Swift-style: “in my gym era,” “in my villain era.” Any mood can be an era.', example: '“I’m in my early-bedtime era.”', tags: ['identity', 'trend'], ...WIKT('era') },
+  { category: 'teen', term: 'gaslight', emoji: '🕯️', ageGroup: 'high_school', difficulty: 'medium', definition: 'Manipulating someone into doubting their own memory or sanity. Teens use it loosely for any denial: “stop gaslighting me, you DID say that.”', example: '“He gaslit the whole group chat about the plan.”', tags: ['psychology', 'callout'], ...WIKT('gaslight') },
+  { category: 'teen', term: 'gyat', emoji: '🍑', ageGroup: 'gen_alpha', difficulty: 'hard', definition: 'An exclamation (from “goddamn”) reacting to an attractive body, especially a butt. Parents: this one is objectifying — worth a conversation.', example: 'Kid yells “gyat” in the hallway; teacher sighs.', say: 'gee-YAT', tags: ['brainrot', 'objectifying'], ...WIKT('gyat') },
+  { category: 'teen', term: 'jit', emoji: '👶', ageGroup: 'high_school', difficulty: 'hard', definition: 'A young kid or someone younger than you (Southern/Florida origin). Can be affectionate or dismissive.', example: '“The jits at the park were trying to hoop with us.”', tags: ['regional', 'age'], ...WIKT('jit') },
+  { category: 'teen', term: 'lore', emoji: '📚', ageGroup: 'high_school', difficulty: 'medium', related: ['gaming'], definition: 'Someone’s backstory — the deep personal history that explains them. From game/fandom worldbuilding: “what’s her lore?”', example: '“Wait, he used to be a child actor? That’s crazy lore.”', tags: ['fandom', 'backstory'], ...WIKT('lore') },
+  { category: 'teen', term: 'mother', emoji: '👑', ageGroup: 'high_school', difficulty: 'medium', definition: 'The ultimate compliment for a woman who dominates her field — “she’s mother.” From ballroom culture via stan Twitter.', example: '“Did you see her halftime show? Mother.”', tags: ['compliment', 'stan-culture'], ...WIKT('mother') },
+  { category: 'teen', term: 'oop', emoji: '😶‍🌫️', ageGroup: 'middle', difficulty: 'easy', related: ['texting'], definition: 'The sound of witnessing something awkward — “and I oop.” Filler reaction to drama or a slip-up.', example: '“She walked in right as we were talking about her. Oop.”', tags: ['reaction', 'awkward'], ...WIKT('oop') },
+  { category: 'teen', term: 'opp', emoji: '🎭', ageGroup: 'high_school', difficulty: 'medium', definition: 'Opposition — an enemy, rival, or hater. From drill rap; now any adversary, including your sibling who told on you.', example: '“Don’t invite him, he’s been moving like an opp.”', tags: ['rivalry', 'rap'], ...WIKT('opp') },
+  { category: 'teen', term: 'pick-me', emoji: '🙋', ageGroup: 'high_school', difficulty: 'medium', definition: 'Someone who puts down their own group to win approval from another — classically a “pick-me girl” performing for male attention.', example: '“Saying ‘I’m not like other girls’ is peak pick-me.”', tags: ['callout', 'dating'], ...WIKT('pick-me') },
+  { category: 'teen', term: 'receipts', emoji: '🧾', ageGroup: 'high_school', difficulty: 'easy', related: ['texting'], definition: 'Proof — screenshots, photos, saved messages. “Bring the receipts” = back up your claim.', example: '“She denied it, so I pulled up the receipts.”', tags: ['proof', 'drama'], ...WIKT('receipts') },
+  { category: 'teen', term: 'shook', emoji: '🫨', ageGroup: 'high_school', difficulty: 'easy', definition: 'Shocked, rattled, emotionally destabilized. “I’m still shook.”', example: '“The plot twist left me shook.”', tags: ['reaction'], ...WIKT('shook') },
+  { category: 'teen', term: 'soft launch', emoji: '🤫', ageGroup: 'college', difficulty: 'medium', related: ['texting', 'corporate'], definition: 'Hinting at a new relationship online without revealing who — a hand in one photo, a second coffee cup. The opposite of a hard launch.', example: '“The mystery arm in her story? Total soft launch.”', tags: ['dating', 'social-media'], ...WIKT('soft launch') },
 
-  const load = useCallback(async () => {
-    setError(null);
-    const ids = getSavedIds();
-    if (ids.length === 0) {
-      setTerms([]);
-      return;
-    }
-    try {
-      const res = await fetch('/api/terms', { cache: 'no-store' });
-      if (!res.ok) throw new Error(`Server returned ${res.status}`);
-      const data = await res.json();
-      const byId = new Map(data.terms.map((t) => [t.id, t]));
-      const savedTerms = ids.map((id) => byId.get(id)).filter(Boolean);
-      setTerms(savedTerms);
-      const n = {};
-      for (const id of ids) {
-        const note = getNote(id);
-        if (note) n[id] = note;
-      }
-      setNotes(n);
-    } catch (e) {
-      setError(String(e.message || e));
-    }
-  }, []);
+  // ---------------- TEXTING (24 new) ----------------
+  { category: 'texting', term: 'ASAP', emoji: '⚡', difficulty: 'easy', related: ['corporate'], definition: 'As soon as possible. The original urgency acronym.', example: '“Call me asap.”', tags: ['acronym', 'classic'], ...WIKT('ASAP') },
+  { category: 'texting', term: 'aka', emoji: '🏷️', difficulty: 'easy', definition: 'Also known as.', example: '“My brother aka the fridge raider.”', tags: ['acronym', 'classic'], ...WIKT('aka') },
+  { category: 'texting', term: 'ETA', emoji: '🕐', difficulty: 'easy', definition: 'Estimated time of arrival. “ETA?” = when will you get here?', example: '“eta? movie starts in 10.”', tags: ['acronym', 'time'], ...WIKT('ETA') },
+  { category: 'texting', term: 'ilysm', emoji: '💖', difficulty: 'medium', definition: 'I love you so much. ILY, escalated.', example: '“you brought me fries?? ilysm.”', tags: ['acronym', 'affection'], ...WIKT('ilysm') },
+  { category: 'texting', term: 'kk', emoji: '👌', difficulty: 'easy', definition: 'Okay — friendlier than a bare “k,” which reads as cold or annoyed. The double letter defuses it.', example: '“meet at 6?” “kk.”', tags: ['agreement', 'tone'], ...WIKT('kk') },
+  { category: 'texting', term: 'ly', emoji: '💕', difficulty: 'easy', definition: 'Love you. Quick sign-off among friends and family.', example: '“gtg, ly!”', tags: ['acronym', 'affection'], ...WIKT('ly') },
+  { category: 'texting', term: 'mhm', emoji: '😑', difficulty: 'medium', definition: 'Yes — but tone matters. Can be genuine agreement or flat, skeptical “sure.”', example: '“You cleaned your room?” “mhm.”', tags: ['agreement', 'tone'], ...WIKT('mhm') },
+  { category: 'texting', term: 'nty', emoji: '🙅‍♂️', difficulty: 'easy', definition: 'No thank you.', example: '“wanna run at 6am?” “nty.”', tags: ['acronym', 'decline'], ...WIKT('nty') },
+  { category: 'texting', term: 'oml', emoji: '😵', difficulty: 'easy', definition: 'Oh my lord. OMG variant.', example: '“oml the test got moved to today.”', tags: ['acronym', 'reaction'], ...WIKT('oml') },
+  { category: 'texting', term: 'otw', emoji: '🛣️', difficulty: 'easy', definition: 'On the way. Interchangeable with OMW.', example: '“otw, 5 min.”', tags: ['acronym'], ...WIKT('otw') },
+  { category: 'texting', term: 'rq', emoji: '🕒', difficulty: 'medium', definition: 'Real quick. “Come here rq.”', example: '“can you check my essay rq?”', tags: ['acronym', 'shorthand'], ...WIKT('rq') },
+  { category: 'texting', term: 'tyt', emoji: '🧘', difficulty: 'medium', definition: 'Take your time.', example: '“no rush, tyt.”', tags: ['acronym', 'reassurance'], ...WIKT('tyt') },
+  { category: 'texting', term: 'wtv', emoji: '🤍', difficulty: 'medium', definition: 'Whatever. Often signals passive indifference — “wtv” can mean it’s fine or it’s very much not fine.', example: '“do what you want, wtv.”', tags: ['acronym', 'tone'], ...WIKT('wtv') },
+  { category: 'texting', term: 'atm', emoji: '⌚', difficulty: 'easy', definition: 'At the moment. Not the cash machine.', example: '“busy atm, text you later.”', tags: ['acronym', 'time'], ...WIKT('atm') },
+  { category: 'texting', term: 'TBD', emoji: '📅', difficulty: 'easy', related: ['corporate'], definition: 'To be determined/decided. Placeholder for unknowns.', example: '“Party location tbd.”', tags: ['acronym', 'planning'], ...WIKT('TBD') },
+  { category: 'texting', term: 'smth', emoji: '🔤', difficulty: 'easy', definition: 'Something. Also smh’s easily-confused cousin — read carefully.', example: '“I’ll bring smth to snack on.”', tags: ['shorthand'], ...WIKT('smth') },
+  { category: 'texting', term: 'srsly', emoji: '😤', difficulty: 'easy', definition: 'Seriously.', example: '“srsly stop leaving dishes in the sink.”', tags: ['shorthand', 'emphasis'], ...WIKT('srsly') },
+  { category: 'texting', term: 'wdym', emoji: '❔', difficulty: 'easy', definition: 'What do you mean?', example: '“wdym you’re not coming??”', tags: ['acronym', 'question'], ...WIKT('wdym') },
+  { category: 'texting', term: 'fs', emoji: '💯', difficulty: 'medium', definition: 'For sure. Agreement — “fs fs” for emphasis.', example: '“you in?” “fs.”', tags: ['acronym', 'agreement'], ...WIKT('fs') },
+  { category: 'texting', term: 'gn', emoji: '🌙', difficulty: 'easy', definition: 'Good night.', example: '“gn, see you tomorrow.”', tags: ['acronym'], ...WIKT('gn') },
+  { category: 'texting', term: 'gm', emoji: '☀️', difficulty: 'easy', definition: 'Good morning.', example: '“gm! bus in 20.”', tags: ['acronym'], ...WIKT('gm') },
+  { category: 'texting', term: 'idek', emoji: '🌀', difficulty: 'medium', definition: 'I don’t even know. IDK with extra bewilderment.', example: '“why is he mad? idek.”', tags: ['acronym'], ...WIKT('idek') },
+  { category: 'texting', term: 'idr', emoji: '🫧', difficulty: 'medium', definition: 'I don’t remember.', example: '“what was the homework? idr.”', tags: ['acronym'], ...WIKT('idr') },
+  { category: 'texting', term: 'IMHO', emoji: '🎩', difficulty: 'easy', definition: 'In my humble opinion. IMO with a bow tie.', example: '“imho the book was better.”', tags: ['acronym', 'opinion'], ...WIKT('IMHO') },
 
-  useEffect(() => {
-    load();
-  }, [load]);
+  // ---------------- GAMING (19 new) ----------------
+  { category: 'gaming', term: 'Easter egg', emoji: '🥚', difficulty: 'easy', related: ['coding'], definition: 'A hidden secret developers tuck into a game (or any software) for players to discover.', example: '“There’s an Easter egg if you visit the lighthouse at night.”', tags: ['secrets'], ...WIKT('Easter egg') },
+  { category: 'gaming', term: 'gacha', emoji: '🎰', difficulty: 'hard', definition: 'Games where you spend currency on randomized character/item pulls — slot-machine mechanics, from Japanese capsule toys. Parents: this is where the money goes.', example: '“He spent his birthday money on gacha pulls.”', tags: ['monetization', 'warning'], ...WIKT('gacha') },
+  { category: 'gaming', term: 'HUD', emoji: '🖥️', difficulty: 'medium', definition: 'Heads-up display — the health bars, ammo counts, and minimaps overlaid on the screen.', example: '“Playing with the HUD off is hardcore mode.”', tags: ['acronym', 'interface'], ...WIKT('HUD') },
+  { category: 'gaming', term: 'kill steal', emoji: '🦹', difficulty: 'medium', definition: 'Swooping in for the final blow after a teammate did all the work — stealing the credit and often the reward.', example: '“Bro kill-stole after I got him to 1 HP.”', tags: ['etiquette', 'toxicity'], ...WIKT('kill steal') },
+  { category: 'gaming', term: 'matchmaking', emoji: '🤝', difficulty: 'easy', definition: 'The system that pairs players of (theoretically) similar skill into matches. Blamed for every loss.', example: '“Matchmaking put us against a full pro squad.”', tags: ['systems'], ...WIKT('matchmaking') },
+  { category: 'gaming', term: 'pay-to-win', emoji: '💸', difficulty: 'medium', definition: 'A game where spending real money buys competitive advantage, not just cosmetics. Said with contempt.', example: '“The new shop items are straight pay-to-win.”', tags: ['monetization', 'criticism'], ...WIKT('pay-to-win') },
+  { category: 'gaming', term: 'ragdoll', emoji: '🪆', difficulty: 'medium', definition: 'The floppy physics a character’s body gets when defeated — and the hilarious glitches it produces.', example: '“His ragdoll flew across the whole map.”', tags: ['physics', 'humor'], ...WIKT('ragdoll') },
+  { category: 'gaming', term: 'rekt', emoji: '🪦', difficulty: 'easy', related: ['texting'], definition: 'Wrecked — thoroughly destroyed. “Get rekt” is the taunt.', example: '“Absolutely rekt in that 1v1.”', tags: ['taunt', 'teasing'], ...WIKT('rekt') },
+  { category: 'gaming', term: 'scrub', emoji: '🧽', difficulty: 'medium', definition: 'A bad player who blames everything but their own play — worse connotation than noob, which at least implies newness.', example: '“He calls everyone hackers. Total scrub.”', tags: ['teasing'], ...WIKT('scrub') },
+  { category: 'gaming', term: 'skin', emoji: '🎨', difficulty: 'easy', related: ['teen'], definition: 'A cosmetic outfit/appearance for a character or weapon. No gameplay effect; enormous social effect.', example: '“He has every rare skin in the game.”', tags: ['cosmetics', 'monetization'], ...WIKT('skin') },
+  { category: 'gaming', term: 'softlock', emoji: '🔒', difficulty: 'hard', related: ['coding'], definition: 'Getting stuck in a game state where progress is impossible but the game hasn’t crashed — no error, just doom.', example: '“Saved with 0 HP outside the boss room. Softlocked.”', tags: ['bugs'], ...WIKT('softlock') },
+  { category: 'gaming', term: 'whiff', emoji: '💨', difficulty: 'medium', definition: 'To completely miss an attack, especially an important one, especially in front of everyone.', example: '“He whiffed the ultimate and we lost the fight.”', tags: ['mistakes'], ...WIKT('whiff') },
+  { category: 'gaming', term: 'wipe', emoji: '🧻', difficulty: 'medium', definition: 'When the entire team dies — a full party wipe. Also a fresh-start server reset in survival games.', example: '“One bad pull and it was a full wipe.”', tags: ['mmo', 'failure'], ...WIKT('wipe') },
+  { category: 'gaming', term: 'checkpoint', emoji: '🚩', difficulty: 'easy', definition: 'A save point mid-level so death doesn’t send you back to the start.', example: '“Thank god there was a checkpoint before the boss.”', tags: ['mechanics'], ...WIKT('checkpoint') },
+  { category: 'gaming', term: 'combo', emoji: '🥊', difficulty: 'easy', definition: 'A chained sequence of attacks executed without a break. The bread and butter of fighting games.', example: '“She landed a 40-hit combo.”', tags: ['fighting-games', 'skill'], ...WIKT('combo') },
+  { category: 'gaming', term: 'one-shot', emoji: '☄️', difficulty: 'medium', definition: 'To kill something in a single hit — or be killed in one. “The boss one-shots you if you miss the dodge.”', example: '“My build one-shots the miniboss.”', tags: ['mechanics'], ...WIKT('one-shot') },
+  { category: 'gaming', term: 'open world', emoji: '🗾', difficulty: 'easy', definition: 'A game you can roam freely instead of following fixed levels — go anywhere, ignore the story, pet the dog.', example: '“100 hours in and I haven’t touched the main quest. Open world things.”', tags: ['genre'], ...WIKT('open world') },
+  { category: 'gaming', term: 'toxic', emoji: '☣️', difficulty: 'easy', related: ['teen', 'texting'], definition: 'Hostile, insulting behavior in games and communities — flaming, blaming, slurs. The catch-all word for bad online behavior.', example: '“Muted the whole lobby, too toxic.”', tags: ['behavior', 'safety'], ...WIKT('toxic') },
+  { category: 'gaming', term: 'patch', emoji: '🩹', difficulty: 'easy', related: ['coding'], definition: 'An update that fixes bugs and rebalances the game. “Patch notes” are required reading; “patched out” = the fun exploit is gone.', example: '“They patched the duplication glitch.”', tags: ['updates'], ...WIKT('patch') },
 
-  return (
-    <>
-      <AppHeader subtitle="Your bookmarks & notes — stored in this browser only" />
-      <main className="page-body">
-        {error && (
-          <div className="error-box" role="alert">
-            {error}
-            <div style={{ marginTop: 8 }}>
-              <button className="btn small" onClick={load}>↻ Retry</button>
-            </div>
-          </div>
-        )}
+  // ---------------- CODING (11 new) ----------------
+  { category: 'coding', term: 'hello world', emoji: '👋', difficulty: 'easy', definition: 'The traditional first program in any language: print “Hello, world!” The programmer’s first step since the 1970s.', example: '“Day one of learning Rust: hello world compiles.”', tags: ['classic', 'learning'], ...WIKT('hello world') },
+  { category: 'coding', term: 'syntactic sugar', emoji: '🍬', difficulty: 'hard', definition: 'Language features that make code sweeter to write but add no new power — a nicer way to say the same thing.', example: '“Arrow functions are mostly syntactic sugar.”', tags: ['languages'], ...WIKT('syntactic sugar') },
+  { category: 'coding', term: 'duck typing', emoji: '🦆', difficulty: 'hard', definition: '“If it walks like a duck and quacks like a duck, it’s a duck” — caring what an object can do, not what it’s called.', example: '“Python doesn’t check the type — duck typing.”', tags: ['languages', 'concept'], ...WIKT('duck typing') },
+  { category: 'coding', term: 'greenfield', emoji: '🌱', difficulty: 'medium', related: ['corporate'], definition: 'A brand-new project with no legacy constraints — the developer’s dream. Opposite: brownfield.', example: '“It’s a greenfield build, we can pick any stack.”', tags: ['projects'], ...WIKT('greenfield') },
+  { category: 'coding', term: 'code freeze', emoji: '🥶', difficulty: 'medium', related: ['corporate'], definition: 'A period before release when no new changes are allowed — only critical fixes. Always announced; always violated.', example: '“We’re in code freeze until the launch.”', tags: ['release', 'process'], ...WIKI('Freeze (software engineering)', 'Freeze_(software_engineering)') },
+  { category: 'coding', term: 'smoke test', emoji: '💨', difficulty: 'medium', definition: 'A quick “does it even turn on?” check before deeper testing — from hardware, where the first test is whether it smokes.', example: '“Smoke test passed, running the full suite now.”', tags: ['testing'], ...WIKT('smoke test') },
+  { category: 'coding', term: 'vaporware', emoji: '🌫️', difficulty: 'medium', related: ['corporate', 'gaming'], definition: 'Software announced with fanfare that never actually ships. Gamers know the pain.', example: '“That sequel has been vaporware for a decade.”', tags: ['products', 'skepticism'], ...WIKT('vaporware') },
+  { category: 'coding', term: 'jank', emoji: '🪤', difficulty: 'medium', related: ['gaming', 'teen'], definition: 'Poor quality; stuttery, unreliable, held together with tape. “Janky” describes half the internet.', example: '“The animation is janky on older phones.”', tags: ['quality'], ...WIKT('jank') },
+  { category: 'coding', term: 'pair programming', emoji: '👥', difficulty: 'medium', definition: 'Two developers, one keyboard: one types, one navigates. Half code review, half buddy system.', example: '“We pair-programmed through the tricky migration.”', tags: ['practice', 'collaboration'], ...WIKT('pair programming') },
+  { category: 'coding', term: 'nerd snipe', emoji: '🎯', difficulty: 'hard', definition: 'Presenting a problem so interesting that the victim drops everything to solve it. From xkcd #356.', example: '“The puzzle nerd-sniped the whole engineering channel.”', tags: ['culture', 'humor'], ...WIKT('nerd snipe') },
+  { category: 'coding', term: 'feature creep', emoji: '🐍', difficulty: 'medium', related: ['corporate', 'gaming'], definition: 'Scope creep’s product cousin: features piling onto a product until it collapses under its own settings menu.', example: '“The app has 9 toolbars now. Feature creep won.”', tags: ['project-management'], ...WIKI('Feature creep', 'Feature_creep') },
 
-        {terms === null && !error && (
-          <div className="card-list" aria-hidden="true">
-            {[...Array(3)].map((_, i) => <div key={i} className="skeleton card" />)}
-          </div>
-        )}
-
-        {terms !== null && terms.length === 0 && (
-          <div className="empty-state">
-            <div className="empty-emoji" aria-hidden="true">🔖</div>
-            <h3>Nothing saved yet</h3>
-            <p>Tap “Save” on any term to keep it here. Saved terms and notes never leave this browser.</p>
-            <div style={{ marginTop: 14 }}>
-              <Link href="/glossary" className="btn small primary" role="button" style={{ display: 'inline-flex' }}>
-                Browse the glossary
-              </Link>
-            </div>
-          </div>
-        )}
-
-        {terms !== null && terms.length > 0 && (
-          <>
-            <p className="count-line">{terms.length} saved term{terms.length === 1 ? '' : 's'}</p>
-            <div className="card-list">
-              {terms.map((t) => (
-                <div key={t.id}>
-                  <TermCard term={t} />
-                  {notes[t.id] && (
-                    <p className="evidence-line" style={{ padding: '0 4px' }}>
-                      📝 <strong style={{ color: 'var(--amber)' }}>Your note:</strong> {notes[t.id]}
-                    </p>
-                  )}
-                </div>
-              ))}
-            </div>
-          </>
-        )}
-      </main>
-    </>
-  );
-}
+  // ---------------- CORPORATE (15 new) ----------------
+  { category: 'corporate', term: 'ballpark figure', emoji: '⚾', difficulty: 'easy', definition: 'A rough estimate. “Give me a ballpark” = I won’t hold you to it (they will).', example: '“Ballpark figure for the redesign?”', tags: ['estimates'], ...WIKT('ballpark figure') },
+  { category: 'corporate', term: 'back burner', emoji: '🍳', difficulty: 'easy', definition: 'Where projects go to be “not cancelled” — deprioritized indefinitely.', example: '“The rebrand is on the back burner until Q3.”', tags: ['priorities'], ...WIKT('back burner') },
+  { category: 'corporate', term: 'close the loop', emoji: '➰', difficulty: 'medium', definition: 'To follow up and finish an open conversation so everyone has the final answer.', example: '“Closing the loop: the vendor confirmed Friday.”', tags: ['communication'], ...WIKT('close the loop') },
+  { category: 'corporate', term: 'deliverable', emoji: '📦', difficulty: 'easy', definition: 'The concrete thing you owe: the report, the deck, the build. Work, but nounified.', example: '“What are the deliverables for phase one?”', tags: ['projects'], ...WIKT('deliverable') },
+  { category: 'corporate', term: 'ducks in a row', emoji: '🦆', difficulty: 'easy', definition: 'Getting organized before acting — everything prepared and lined up.', example: '“Let’s get our ducks in a row before the client call.”', tags: ['preparation'], ...WIKT("get one's ducks in a row") },
+  { category: 'corporate', term: 'herding cats', emoji: '🐈', difficulty: 'medium', definition: 'Trying to coordinate people who refuse to be coordinated. Every group project ever.', example: '“Scheduling six VPs is herding cats.”', tags: ['management', 'humor'], ...WIKT('herding cats') },
+  { category: 'corporate', term: 'north star', emoji: '🌟', difficulty: 'medium', definition: 'The single guiding goal or metric everything else should serve.', example: '“User retention is our north star.”', tags: ['strategy', 'buzzword'], ...WIKT('north star') },
+  { category: 'corporate', term: 'silo', emoji: '🏗️', difficulty: 'medium', definition: 'A team that doesn’t share information with others. “Breaking down silos” is the eternal reorg promise.', example: '“Sales and support are total silos.”', tags: ['organization'], ...WIKT('silo') },
+  { category: 'corporate', term: 'stakeholder', emoji: '🧑‍⚖️', difficulty: 'easy', definition: 'Anyone with a stake in the outcome — the people who must be kept happy, informed, or at least quiet.', example: '“Loop in the stakeholders before we commit.”', tags: ['people'], ...WIKT('stakeholder') },
+  { category: 'corporate', term: 'table stakes', emoji: '🎲', difficulty: 'hard', definition: 'The bare minimum required to even compete — from poker’s minimum buy-in.', example: '“Mobile support isn’t a feature anymore, it’s table stakes.”', tags: ['strategy'], ...WIKT('table stakes') },
+  { category: 'corporate', term: 'throw under the bus', emoji: '🚌', difficulty: 'easy', definition: 'Publicly blaming a colleague to save yourself.', example: '“He threw the whole design team under the bus in the retro.”', tags: ['politics'], ...WIKT('throw under the bus') },
+  { category: 'corporate', term: 'value-add', emoji: '➕', difficulty: 'medium', definition: 'The extra benefit something brings — or a buzzword prefix for anything a vendor wants to charge more for.', example: '“What’s the value-add of the premium tier?”', tags: ['buzzword'], ...WIKT('value-add') },
+  { category: 'corporate', term: 'ballpark', emoji: '🏟️', difficulty: 'easy', definition: 'As a verb: to estimate roughly. “Ballpark it for me.”', example: '“Can you ballpark the timeline?”', tags: ['estimates'], ...WIKT('ballpark') },
+  { category: 'corporate', term: 'rent free', emoji: '🏠', difficulty: 'medium', related: ['teen', 'texting'], definition: 'Living “rent free in your head” = you can’t stop thinking about someone/something, and they aren’t even paying for the space. Teens use it as a taunt.', example: '“You’re still mad about that game? It’s living rent free.”', tags: ['taunt', 'psychology'], ...WIKT('rent free') },
+  { category: 'corporate', term: 'per my last email', emoji: '📧', difficulty: 'medium', definition: 'Corporate for “I already told you this — read it this time.” The politest available aggression.', example: '“Per my last email, the deadline was Tuesday.”', tags: ['passive-aggressive', 'email'], ...WIKI('Corporate jargon', 'Corporate_jargon') },
+];
