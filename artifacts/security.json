@@ -1,0 +1,72 @@
+{
+  "schema_version": "1.2.0",
+  "project": "PlainSlang",
+  "scanned_at": "2026-09-07T17:17:12Z",
+  "scope": "static edition (primary) + server/pg + supabase-mode libs (dormant editions)",
+  "findings": [
+    {
+      "id": "SEC-F1",
+      "severity": "medium",
+      "title": "PostgREST or() filter injection in supabase mode",
+      "detail": "listTerms interpolated user-controlled q/category into .or() filter syntax; , ( ) metacharacters could alter the filter (data exposure limited: table is public-read by design, but crafted input could error or widen queries).",
+      "status": "FIXED",
+      "fix": "category validated against fixed allowlist; q stripped of PostgREST metacharacters and wildcards, capped at 80 chars (lib/data.js)."
+    },
+    {
+      "id": "SEC-F2",
+      "severity": "medium",
+      "title": "Feed-derived URLs rendered into href without scheme check",
+      "detail": "RSS link fields flowed into <a href> in the static site; a compromised/malicious feed could deliver javascript: URIs. esc() prevents markup injection but not scheme abuse.",
+      "status": "FIXED",
+      "fix": "safeLink() whitelist (http/https) at data.json generation + safeHref() render gate on all 4 external-link sites; verified by live poisoned-data.json probe."
+    },
+    {
+      "id": "SEC-F3",
+      "severity": "low",
+      "title": "Rate limiter trusted leftmost x-forwarded-for",
+      "detail": "Leftmost XFF entry is client-spoofable, allowing rate-limit evasion on server edition.",
+      "status": "FIXED",
+      "fix": "clientKey now prefers cf-connecting-ip / x-real-ip, else rightmost XFF entry (lib/ratelimit.js)."
+    },
+    {
+      "id": "SEC-F4",
+      "severity": "low",
+      "title": "No security headers on static hosting",
+      "detail": "No CSP/nosniff/frame-ancestors on Pages deploys.",
+      "status": "FIXED",
+      "fix": "site/_headers added (CSP default-src 'none' + inline allowances the SPA needs, nosniff, DENY framing, referrer & permissions policies). Note: CSP requires 'unsafe-inline' script because the SPA is single-file \u2014 accepted; XSS surface separately verified by probe."
+    },
+    {
+      "id": "SEC-F5",
+      "severity": "info",
+      "title": "GH Action push race",
+      "detail": "Daily commit could fail if another commit landed mid-run.",
+      "status": "FIXED",
+      "fix": "git pull --rebase before push in workflow."
+    },
+    {
+      "id": "SEC-F6",
+      "severity": "info",
+      "title": "README shows DATABASE_URL template with placeholder password",
+      "detail": "Placeholder only (<password>) \u2014 not a real credential.",
+      "status": "ACCEPTED",
+      "fix": "none needed; documented format is intentional."
+    }
+  ],
+  "verifications": [
+    "npm audit: 0 vulnerabilities (full tree)",
+    "secret scan: no secret-shaped strings in source/configs/records/site",
+    "SQL: all pg queries parameterized; no template interpolation",
+    "XSS probe (live browser): 8/8 passed, 0 alerts \u2014 hostile search, hostile localStorage note, poisoned data.json headline/link/sourceUrl, javascript: href block",
+    "data.json contract: 844 terms, unique ids+names, all links http(s)",
+    "ID determinism: two rebuilds produce identical id->term mapping (localStorage saves stable)",
+    "regex hostile input: termInText/cleanTerm handle pathological input in 0ms (try/catch fallback)",
+    "functional regression after patches: 17/17 static audit, 10/10 unit tests, Next build clean"
+  ],
+  "fixture_origin": "All demo/test strings synthetic; no real PII anywhere.",
+  "residual_risks": [
+    "CSP uses 'unsafe-inline' (single-file SPA architecture) \u2014 compensated by esc()/safeHref discipline + live probe evidence",
+    "GitHub Action supply chain: actions pinned to major tags (v4), not SHAs \u2014 acceptable for this project tier",
+    "Server edition remains no-auth for writes (documented; dormant \u2014 static edition is primary)"
+  ]
+}

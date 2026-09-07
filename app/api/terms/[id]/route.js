@@ -20,7 +20,8 @@ export async function GET(_request, { params }) {
     if (!term) return NextResponse.json({ error: 'Term not found' }, { status: 404 });
     return NextResponse.json({ term });
   } catch (e) {
-    return NextResponse.json({ error: String(e.message || e) }, { status: 500 });
+    const status = e.code === 'READ_ONLY' ? 403 : 500;
+    return NextResponse.json({ error: String(e.message || e) }, { status });
   }
 }
 
@@ -45,7 +46,8 @@ export async function PUT(request, { params }) {
     emitEvent('term-updated', { id: term.id, term: term.term, category: term.category });
     return NextResponse.json({ term });
   } catch (e) {
-    return NextResponse.json({ error: String(e.message || e) }, { status: 500 });
+    const status = e.code === 'READ_ONLY' ? 403 : 500;
+    return NextResponse.json({ error: String(e.message || e) }, { status });
   }
 }
 
@@ -61,6 +63,7 @@ export async function DELETE(request, { params }) {
     emitEvent('term-deleted', { id, term: name });
     return NextResponse.json({ deleted: true });
   } catch (e) {
-    return NextResponse.json({ error: String(e.message || e) }, { status: 500 });
+    const status = e.code === 'READ_ONLY' ? 403 : 500;
+    return NextResponse.json({ error: String(e.message || e) }, { status });
   }
 }

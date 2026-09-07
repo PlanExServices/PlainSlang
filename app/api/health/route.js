@@ -9,7 +9,8 @@ export async function GET() {
     const c = await counts();
     return NextResponse.json({
       ok: true,
-      db: MODE === 'pg' ? 'postgres' : 'supabase',
+      db: MODE === 'pg' ? 'postgres' : MODE === 'supabase' ? 'supabase' : 'static (read-only)',
+      readOnly: MODE === 'static',
       totalTerms: c.total,
       seededTerms: c.seeded,
       trendingTerms: c.trending,

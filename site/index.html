@@ -218,6 +218,7 @@ const diffInfo=id=>DIFFS.find(d=>d.id===id)||{id,label:id};
 let DATA=null, TERMS=[];
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const safeHref=u=>(typeof u==='string'&&/^https?:\/\//i.test(u))?esc(u):null;
 
 const LS={saved:'plainslang.saved',notes:'plainslang.notes'};
 (function migrate(){try{
@@ -511,14 +512,14 @@ function renderTrending(){
     <div>News-feed verification · ${snap.matchedCount} headline match${snap.matchedCount===1?'':'es'}</div>
     <ul>${snap.sourcesChecked.map(s=>`<li>${s.ok?`<span class="source-ok">✓ ${esc(s.name)} — ${s.items} items read</span>`:`<span class="source-fail">✕ ${esc(s.name)} — ${esc(s.error)}</span>`}</li>`).join('')}</ul>
     ${snap.wiktionarySample?.length?`<div style="margin-top:6px">Wiktionary spot-check: ${snap.wiktionarySample.map(w=>`${esc(w.term)} ${w.confirmed===true?'✓':w.confirmed===false?'—':'?'}`).join(' · ')}</div>`:''}
-    ${snap.headlinesSample?.length?`<details style="margin-top:8px"><summary>Headlines checked (${snap.headlinesSample.length} shown)</summary><ul>${snap.headlinesSample.map(h=>`<li>${h.link?`<a href="${esc(h.link)}" target="_blank" rel="noopener noreferrer">${esc(h.title)}</a>`:esc(h.title)}</li>`).join('')}</ul></details>`:''}`:''}
+    ${snap.headlinesSample?.length?`<details style="margin-top:8px"><summary>Headlines checked (${snap.headlinesSample.length} shown)</summary><ul>${snap.headlinesSample.map(h=>`<li>${safeHref(h.link)?`<a href="${safeHref(h.link)}" target="_blank" rel="noopener noreferrer">${esc(h.title)}</a>`:esc(h.title)}</li>`).join('')}</ul></details>`:''}`:''}
     ${radar?`
     <div style="border-top:1px dashed var(--border);margin-top:10px;padding-top:10px">📡 Guide radar — ${radar.results.length} watched sources</div>
     <ul>${radar.results.map(r=>`<li>${r.ok?`<span class="source-ok">✓ ${esc(r.source)} — ${r.scanned} terms, ${r.newCandidates.length===0?'library current':r.newCandidates.length+' new candidate(s)'}</span>`:`<span class="source-fail">✕ ${esc(r.source)} — ${esc(r.error)}</span>`}</li>`).join('')}</ul>
     ${candidates.length?`<details style="margin-top:6px"><summary>New term candidates (review-only — definitions are never auto-written)</summary><ul>${candidates.map(c=>`<li>\u201C${esc(c.t)}\u201D <em style="color:var(--text-faint)">(${esc(c.s)})</em></li>`).join('')}</ul></details>`:''}
     <div style="border-top:1px dashed var(--border);margin-top:10px;padding-top:10px">🔭 New-guide discovery</div>
     <ul>${radar.discovery.map(d=>`<li>${d.ok?`<span class="${d.newGuideUrls.length?'source-warn':'source-ok'}">${d.newGuideUrls.length?'🆕':'✓'} ${esc(d.index)} — ${d.linksScanned} links${d.newGuideUrls.length?', '+d.newGuideUrls.length+' possible new guide(s)':''}</span>`:`<span class="source-fail">✕ ${esc(d.index)} — ${esc(d.error)}</span>`}</li>`).join('')}</ul>
-    ${newGuides.length?`<ul>${newGuides.map(u=>`<li><a href="${esc(u)}" target="_blank" rel="noopener noreferrer">${esc(u)}</a></li>`).join('')}</ul>`:''}`:''}
+    ${newGuides.length?`<ul>${newGuides.map(u=>`<li><a href="${safeHref(u)||'#'}" target="_blank" rel="noopener noreferrer">${esc(u)}</a></li>`).join('')}</ul>`:''}`:''}
    </div>
   </details>
   <p class="count-line">${trending.length} trending term${trending.length===1?'':'s'}</p>
@@ -591,8 +592,8 @@ function renderTerm(id){
   <section class="section-card"><h3 class="section-label">What it means</h3><p>${esc(t.definition)}</p></section>
   ${t.example?`<section class="section-card"><h3 class="section-label">Heard in the wild</h3><p class="example-quote">${esc(t.example)}</p></section>`:''}
   ${t.notes?`<section class="section-card"><h3 class="section-label">Origin & notes</h3><p>${esc(t.notes)}</p></section>`:''}
-  ${t.trending&&t.trendingEvidence?`<section class="section-card"><h3 class="section-label">Why it\u2019s marked trending</h3><p style="font-size:14px"><strong style="color:var(--pink)">\u201C${esc(t.trendingEvidence.headline)}\u201D</strong></p><p style="font-size:12.5px;color:var(--text-faint);margin-top:6px">Source feed: ${esc(t.trendingEvidence.feed||'')}${t.trendingEvidence.link?` · <a href="${esc(t.trendingEvidence.link)}" target="_blank" rel="noopener noreferrer">read the story ↗</a>`:''}</p></section>`:''}
-  ${t.sourceName||t.sourceUrl?`<section class="section-card"><h3 class="section-label">Documented source</h3><p style="font-size:14px">${t.sourceUrl?`<a href="${esc(t.sourceUrl)}" target="_blank" rel="noopener noreferrer">${esc(t.sourceName||t.sourceUrl)} ↗</a>`:esc(t.sourceName)}</p></section>`:''}
+  ${t.trending&&t.trendingEvidence?`<section class="section-card"><h3 class="section-label">Why it\u2019s marked trending</h3><p style="font-size:14px"><strong style="color:var(--pink)">\u201C${esc(t.trendingEvidence.headline)}\u201D</strong></p><p style="font-size:12.5px;color:var(--text-faint);margin-top:6px">Source feed: ${esc(t.trendingEvidence.feed||'')}${safeHref(t.trendingEvidence.link)?` · <a href="${safeHref(t.trendingEvidence.link)}" target="_blank" rel="noopener noreferrer">read the story ↗</a>`:''}</p></section>`:''}
+  ${t.sourceName||t.sourceUrl?`<section class="section-card"><h3 class="section-label">Documented source</h3><p style="font-size:14px">${safeHref(t.sourceUrl)?`<a href="${safeHref(t.sourceUrl)}" target="_blank" rel="noopener noreferrer">${esc(t.sourceName||t.sourceUrl)} ↗</a>`:esc(t.sourceName)}</p></section>`:''}
   ${(t.tags||[]).length?`<section class="section-card"><h3 class="section-label">Tags</h3><div>${t.tags.map(tag=>`<span class="tag-pill" style="margin:0 4px 4px 0">#${esc(tag)}</span>`).join('')}</div></section>`:''}
   <section class="section-card">
    <h3 class="section-label">My private note</h3>

@@ -1,0 +1,10 @@
+PASS  hostile search string does not execute
+PASS  search survives hostile input
+PASS  hostile note on saved page does not execute
+PASS  note rendered as text — 📝 Your note: <img src=x onerror=alert(2)>
+PASS  hostile note on detail page does not execute
+PASS  poisoned evidence headline does not execute
+PASS  javascript: URLs blocked from href — 0 js-hrefs found
+PASS  poisoned headline sample blocked
+
+===== 8/8 PASSED, alerts fired: 0 =====

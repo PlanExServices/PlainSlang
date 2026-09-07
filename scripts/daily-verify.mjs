@@ -30,6 +30,12 @@ const OUT = path.join(__dirname, '..', 'site', 'data.json');
 // 1. Build the term list — same wave semantics as the DB seeder (lib/db.js).
 // Deterministic: same seed files -> same ids, so localStorage saves stay valid.
 // ---------------------------------------------------------------------------
+function safeLink(u) {
+  // Only http/https URLs may enter data.json (feed could theoretically carry
+  // javascript:/data: URIs; strip them at the single generation choke point).
+  return typeof u === 'string' && /^https?:\/\//i.test(u) ? u : null;
+}
+
 function buildTerms() {
   const terms = [];
   let nextId = 1;
@@ -145,7 +151,7 @@ async function runTrending(terms) {
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const items = extractItems(await res.text());
       sourcesChecked.push({ name: feed.name, ok: true, items: items.length });
-      headlines.push(...items.slice(0, 40).map((i) => ({ ...i, feed: feed.name })));
+      headlines.push(...items.slice(0, 40).map((i) => ({ ...i, link: safeLink(i.link), feed: feed.name })));
       anySuccess = true;
     } catch (e) {
       sourcesChecked.push({ name: feed.name, ok: false, error: String(e.message || e) });
@@ -162,7 +168,7 @@ async function runTrending(terms) {
       const hit = headlines.find((h) => termInText(t.term, h.title));
       if (hit) {
         t.trending = true;
-        t.trendingEvidence = { headline: hit.title, link: hit.link, feed: hit.feed };
+        t.trendingEvidence = { headline: hit.title, link: safeLink(hit.link), feed: hit.feed };
         matchedCount++;
       }
     }

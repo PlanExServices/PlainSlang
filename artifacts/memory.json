@@ -4,7 +4,7 @@
   "current_phase": "preview",
   "current_completion_label": "incomplete",
   "accepted_core_outcome": "Visitor searches/browses a slang term and reads a plain-English, source-cited definition; trending list verified against live feeds.",
-  "last_turn_summary": "Option A shipped: static site (site/) + daily GitHub Action running full live verification (news feeds + 9 guides + discovery). 844 terms deterministic from seeds. 17/17 mobile audit. User deploys via Cloudflare Pages, output dir 'site'.",
+  "last_turn_summary": "Fixed live 500: server edition without DATABASE_URL now falls back to read-only static mode (serves site/data.json, writes 403 with clear message, health says static read-only). Verified end-to-end with no env vars. User needs to push to GitHub to heal the Render deploy.",
   "open_items": [
     {
       "id": "OI-1",
@@ -203,6 +203,44 @@
       "unresolved": [
         "waivers W-001/W-002",
         "OI-7 user deploy steps"
+      ]
+    },
+    {
+      "at": "2026-09-07T17:17:12Z",
+      "user_message_brief": "Full security scan and bug hunt.",
+      "actions_taken": [
+        "npm audit 0 vulns",
+        "secret scan clean",
+        "found+fixed 3 real vulns: PostgREST or() injection (allowlist+sanitize), javascript:-URI href injection via feeds (safeLink+safeHref gates), XFF rate-limit spoof (rightmost/platform header)",
+        "added site/_headers (CSP,nosniff,frame DENY)",
+        "hardened GH Action push race",
+        "live XSS probe built: 8/8 pass incl. poisoned data.json",
+        "ID-determinism verified across rebuilds",
+        "17/17 functional + 10/10 unit post-patch",
+        "artifacts/security.json written"
+      ],
+      "outcomes": "3 fixed vulns, 0 known outstanding. Evidence in artifacts/evidence/ (audit, secretscan, xss-probe log+script).",
+      "new_blockers": [],
+      "unresolved": [
+        "waivers W-001/W-002",
+        "user redeploy of patched files"
+      ]
+    },
+    {
+      "at": "2026-09-07T17:21:54Z",
+      "user_message_brief": "Live site showing 'Couldn't load stats: Server returned 500'.",
+      "actions_taken": [
+        "diagnosed: Render deploy is the server edition with NO DATABASE_URL set \u2014 pg pool AggregateError on every query -> 500s",
+        "implemented graceful static fallback MODE in lib/data.js: no DB env vars -> serves committed site/data.json read-only from memory",
+        "writes now return clean 403 with explanation instead of 500",
+        "health reports db:'static (read-only)'",
+        "verified locally with no env: health/stats/quiz/search/verify/pages all 200, POST=403",
+        "tests 10/10, build clean"
+      ],
+      "outcomes": "Zero-config deploys now work everywhere. Render heals itself on next deploy of these files. Long-term: user should still point Render at static hosting or set DATABASE_URL, but nothing 500s regardless.",
+      "new_blockers": [],
+      "unresolved": [
+        "user: push patched files to GitHub so Render redeploys"
       ]
     }
   ],

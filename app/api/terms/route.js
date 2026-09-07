@@ -18,7 +18,8 @@ export async function GET(request) {
     });
     return NextResponse.json({ terms });
   } catch (e) {
-    return NextResponse.json({ error: String(e.message || e) }, { status: 500 });
+    const status = e.code === 'READ_ONLY' ? 403 : 500;
+    return NextResponse.json({ error: String(e.message || e) }, { status });
   }
 }
 
@@ -40,6 +41,7 @@ export async function POST(request) {
     emitEvent('term-created', { id: term.id, term: term.term, category: term.category });
     return NextResponse.json({ term }, { status: 201 });
   } catch (e) {
-    return NextResponse.json({ error: String(e.message || e) }, { status: 500 });
+    const status = e.code === 'READ_ONLY' ? 403 : 500;
+    return NextResponse.json({ error: String(e.message || e) }, { status });
   }
 }
