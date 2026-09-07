@@ -53,7 +53,7 @@ verified against live news feeds rather than invented.
 - Open CRUD (no auth) is an accepted preview-phase risk; revisit before production-candidate.
 
 ## Cost ceiling (POL-BUDGET-029)
-$0/month. Approved services: Supabase free tier, Render free tier, GitHub free.
+$0/month. Approved services: Cloudflare Pages free tier, GitHub free (Supabase optional for the dormant server edition).
 Any paid tier requires an updated charter + explicit authorization.
 
 ## Completion label

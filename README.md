@@ -91,12 +91,11 @@ The app runs at the edge via [OpenNext](https://opennext.js.org/cloudflare); dat
 
 In this mode browsers get realtime straight from **Supabase Realtime** (WebSockets); the SSE endpoint is unused.
 
-### Node host (Render / Docker / VPS)
+### Node host (Docker / VPS — optional)
 
-Set `DATABASE_URL` to any Postgres (Supabase session pooler on port 5432 works) and the app uses the `pg` driver with LISTEN/NOTIFY → SSE realtime. `render.yaml` and `Dockerfile` are included. GitHub Pages cannot run it (static hosting).
+Set `DATABASE_URL` to any Postgres and run the server edition (`deploy/server-edition/Dockerfile`). Without any DB env vars the server serves the committed `site/data.json` read-only. Not required — Cloudflare Pages is the primary deployment.
 
-- **Render (recommended):** the included `render.yaml` is a one-click blueprint — Dashboard → New → Blueprint → connect this repo. On a paid plan the persistent disk keeps your database (and user-added terms) across deploys; on the free plan the app reseeds its full library on each deploy.
-- **Docker (any host — Railway, Fly.io, a VPS):** `docker build -t plainslang . && docker run -p 3000:3000 -v plainslang-data:/data plainslang`
+- **Docker (any host):** see `deploy/server-edition/Dockerfile`
 - **Vercel:** not supported as-is (serverless filesystem is ephemeral, so SQLite won't persist) — migrate to a hosted DB first.
 
 ## API

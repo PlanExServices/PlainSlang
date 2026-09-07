@@ -1,12 +1,9 @@
-# Workers edition (optional, dormant)
+# Workers edition configs
 
-These configs were moved out of the repo root so Cloudflare Pages doesn't
-auto-detect the project as a Workers/OpenNext app.
+`wrangler.jsonc` and `open-next.config.ts` live at the REPO ROOT because the
+active Cloudflare Workers (git-integrated) deployment needs them there, with
+build command: npx opennextjs-cloudflare build
+deploy command: npx wrangler deploy
 
-The PRIMARY deployment is the static edition: Cloudflare Pages serving `site/`
-(no build command). See the main README.
-
-To use the Workers+Supabase edition instead: copy `wrangler.jsonc` and
-`open-next.config.ts` back to the repo root, restore the deploy script
-(`opennextjs-cloudflare build && opennextjs-cloudflare deploy`), and follow
-the README's "server editions" section.
+The copies in this folder are backups. The static read-only fallback means the
+Worker serves the bundled site/data.json when no Supabase env vars are set.

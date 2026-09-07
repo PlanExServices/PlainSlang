@@ -21,7 +21,7 @@ export async function GET() {
       };
       removeClient = addClient(client);
       client.send(`event: hello\ndata: {"connected":true,"clients":${clientCount()}}\n\n`);
-      // keep proxies (Render/Cloudflare) from idling the connection out
+      // keep proxies (Cloudflare) from idling the connection out
       heartbeat = setInterval(() => {
         try {
           client.send(`: ping ${Date.now()}\n\n`);

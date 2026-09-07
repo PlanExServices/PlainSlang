@@ -4,7 +4,7 @@
   "current_phase": "preview",
   "current_completion_label": "incomplete",
   "accepted_core_outcome": "Visitor searches/browses a slang term and reads a plain-English, source-cited definition; trending list verified against live feeds.",
-  "last_turn_summary": "Fixed live 500: server edition without DATABASE_URL now falls back to read-only static mode (serves site/data.json, writes 403 with clear message, health says static read-only). Verified end-to-end with no env vars. User needs to push to GitHub to heal the Render deploy.",
+  "last_turn_summary": "Fixed Workers 500: static fallback was fs-reading site/data.json (no fs on Workers). Now bundles data.json at build time \u2014 verified in Node (health/stats 200 no-env) and in the rebuilt worker bundle (data present). wrangler+opennext configs restored to root for CF git-integration builds.",
   "open_items": [
     {
       "id": "OI-1",
@@ -64,7 +64,7 @@
     "brand": "PlainSlang \u2014 'Know what your kids mean.' (App Store title: 'PlainSlang: Parent Guide', subtitle: 'Modern Slang in Plain English')",
     "sourcing": "Every term must cite a published source; radar never auto-writes definitions",
     "uploads": "User uploads via GitHub web UI; use github.dev editor to preserve folders \u2014 bulk drag-and-drop flattens and once shuffled file contents",
-    "hosting": "Cloudflare Workers + Supabase (primary, chosen for zero cold-start); GitHub for source; Render/Docker remain supported fallbacks"
+    "hosting": "Cloudflare ONLY. ACTIVE deployment: Workers via git integration at plainslang.fancy-star-2cc7.workers.dev (build: npx opennextjs-cloudflare build, deploy: npx wrangler deploy, configs at repo root). site/ static edition remains available for CF Pages as alternative."
   },
   "pending_user_questions": [
     "Confirm waivers W-001 (component tests) and W-002 (visual matrix) so the phase label can move to phase-complete-with-waiver"
@@ -241,6 +241,42 @@
       "new_blockers": [],
       "unresolved": [
         "user: push patched files to GitHub so Render redeploys"
+      ]
+    },
+    {
+      "at": "2026-09-07T17:30:28Z",
+      "user_message_brief": "Still seeing 500; remove Render from code, Cloudflare only.",
+      "actions_taken": [
+        "verified live: Render /api/health and /api/stats now actually 200 (fallback fix deployed) \u2014 user's 500 is stale browser cache or pre-redeploy load",
+        "removed render.yaml",
+        "moved Dockerfile to deploy/server-edition/ with README",
+        "stripped Render references from lib/data.js, lib/ratelimit.js, app/api/stream, README, charter",
+        "cost ceiling services updated to Cloudflare Pages + GitHub",
+        "tests 10/10, build clean"
+      ],
+      "outcomes": "Repo is Cloudflare-only. User must: push these files, delete the Render service (dashboard), create CF Pages project (output dir: site).",
+      "new_blockers": [],
+      "unresolved": [
+        "user: push to GitHub",
+        "user: delete Render service",
+        "user: create CF Pages project"
+      ]
+    },
+    {
+      "at": "2026-09-07T17:43:07Z",
+      "user_message_brief": "Workers.dev URL 500s on stats.",
+      "actions_taken": [
+        "diagnosed: user deployed the WORKERS edition via CF git integration; static fallback used fs.readFileSync which doesn't exist on Workers -> 'no such file /bundle/site/data.json'",
+        "fix: lib/data.js now imports site/data.json as a build-time bundled module (works Node + Workers)",
+        "verified Node no-env: health/stats 200",
+        "restored wrangler.jsonc + open-next.config.ts to root (CF git build needs them there; backups kept in deploy/workers-edition)",
+        "restored deploy script",
+        "Workers bundle rebuilds clean and contains the data (grep verified)"
+      ],
+      "outcomes": "Push to GitHub -> CF auto-rebuilds -> Worker serves 844 terms read-only without any env vars. Optional later: add Supabase env vars for live CRUD.",
+      "new_blockers": [],
+      "unresolved": [
+        "user: push updated files"
       ]
     }
   ],
