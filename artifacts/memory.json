@@ -4,7 +4,7 @@
   "current_phase": "preview",
   "current_completion_label": "incomplete",
   "accepted_core_outcome": "Visitor searches/browses a slang term and reads a plain-English, source-cited definition; trending list verified against live feeds.",
-  "last_turn_summary": "CF Workers Builds misconfigured: build step didn't run the OpenNext build. Added build:cf script; user must set dashboard Build command to 'npx opennextjs-cloudflare build' and keep Deploy command 'npx wrangler deploy'.",
+  "last_turn_summary": "Made CF build foolproof: npm run build now IS the OpenNext build (recursion avoided by pinning open-next.config.ts buildCommand to raw next build). Verified worker.js produced. Push + retry deploy; no dashboard changes required.",
   "open_items": [
     {
       "id": "OI-1",
@@ -291,6 +291,20 @@
       "new_blockers": [],
       "unresolved": [
         "user: fix CF build settings + push"
+      ]
+    },
+    {
+      "at": "2026-09-07T18:23:47Z",
+      "user_message_brief": "CF still failing: log shows plain next build ran, deploy can't find .open-next.",
+      "actions_taken": [
+        "root-caused from log: dashboard build command still runs npm run build (= next build); OpenNext output never produced",
+        "made repo foolproof: package.json build script IS now opennextjs-cloudflare build; open-next.config.ts pins buildCommand to raw 'npx next build' preventing recursion",
+        "verified: npm run build runs next build exactly once and saves .open-next/worker.js"
+      ],
+      "outcomes": "Any of npm run build / build:cf / npx opennextjs-cloudflare build now produce the worker. User: push, retry deploy. Dashboard needs no changes anymore.",
+      "new_blockers": [],
+      "unresolved": [
+        "user: push + retry deployment"
       ]
     }
   ],

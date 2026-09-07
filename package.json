@@ -4,12 +4,13 @@
   "private": true,
   "scripts": {
     "dev": "next dev -H 0.0.0.0 -p 3000",
-    "build": "next build",
+    "build": "opennextjs-cloudflare build",
     "start": "next start -H 0.0.0.0 -p 3000",
     "test": "node --test __tests__/",
     "seed:supabase": "node scripts/seed-supabase.mjs",
     "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
-    "build:cf": "opennextjs-cloudflare build"
+    "build:cf": "opennextjs-cloudflare build",
+    "build:next": "next build"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.109.0",
