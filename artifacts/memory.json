@@ -1,0 +1,209 @@
+{
+  "schema_version": "1.2.0",
+  "project": "PlainSlang",
+  "current_phase": "preview",
+  "current_completion_label": "incomplete",
+  "accepted_core_outcome": "Visitor searches/browses a slang term and reads a plain-English, source-cited definition; trending list verified against live feeds.",
+  "last_turn_summary": "Collapsed verify panel (expandable details with one-line summary). Radar upgraded with new-article discovery: scans Bark/Axis index pages for unknown guide URLs; found + ingested TikTok Slang guide on first run. Now 8 watched guides + 2 discovery indexes, all clean. 844 terms.",
+  "open_items": [
+    {
+      "id": "OI-1",
+      "item": "Owner confirmation needed for waivers W-001/W-002 (separation of duties, spec 1.3 \u2014 agent cannot self-approve)",
+      "opened_at": "2026-09-03T20:04:11Z"
+    },
+    {
+      "id": "OI-3",
+      "item": "GitHub repo not yet updated with Supabase/realtime + this compliance pass; upload plainslang-supabase zip contents",
+      "opened_at": "2026-09-03T20:04:11Z"
+    },
+    {
+      "id": "OI-5",
+      "item": "Open CRUD without auth is accepted preview risk; add write token before production-candidate",
+      "opened_at": "2026-09-03T20:04:11Z"
+    },
+    {
+      "id": "OI-6",
+      "item": "User must run Cloudflare deployment steps: Supabase project + schema.sql + seed script + wrangler secrets + npm run deploy (agent has no Cloudflare/Supabase credentials \u2014 MANUAL)",
+      "opened_at": "2026-09-03T21:09:26Z"
+    }
+  ],
+  "next_actions": [
+    "User: create Supabase project, run scripts/supabase-schema.sql in SQL editor",
+    "User: run npm run seed:supabase with service-role env vars",
+    "User: fill wrangler.jsonc vars, set wrangler secrets, npm run deploy",
+    "Ask owner to confirm waivers W-001 and W-002",
+    "Upload updated code to GitHub (github.dev '.' editor)"
+  ],
+  "decisions": [
+    {
+      "path": "docs/charter.md",
+      "summary": "Declared platform is web-companion (mobile-first web app); native build is an explicit non-goal for this phase"
+    },
+    {
+      "path": "docs/charter.md",
+      "summary": "Cost ceiling $0/month \u2014 free tiers only"
+    },
+    {
+      "path": "lib/domain/matching.js",
+      "summary": "Domain logic extracted to framework-independent module per POL-PORTABLE-019"
+    },
+    {
+      "path": "lib/ratelimit.js",
+      "summary": "In-process fixed-window rate limiter; move to shared store if multi-instance"
+    },
+    {
+      "path": "lib/data.js",
+      "summary": "Dual-runtime data facade: pg mode (DATABASE_URL) vs supabase mode (SUPABASE_URL+SERVICE_ROLE_KEY); realtime = SSE on Node, Supabase Realtime WebSockets on Workers"
+    },
+    {
+      "path": "wrangler.jsonc",
+      "summary": "Cloudflare Workers deploy via OpenNext; Next upgraded 16.3.1->16.3.4 to satisfy adapter peer range"
+    }
+  ],
+  "blockers": [],
+  "preferences": {
+    "brand": "PlainSlang \u2014 'Know what your kids mean.' (App Store title: 'PlainSlang: Parent Guide', subtitle: 'Modern Slang in Plain English')",
+    "sourcing": "Every term must cite a published source; radar never auto-writes definitions",
+    "uploads": "User uploads via GitHub web UI; use github.dev editor to preserve folders \u2014 bulk drag-and-drop flattens and once shuffled file contents",
+    "hosting": "Cloudflare Workers + Supabase (primary, chosen for zero cold-start); GitHub for source; Render/Docker remain supported fallbacks"
+  },
+  "pending_user_questions": [
+    "Confirm waivers W-001 (component tests) and W-002 (visual matrix) so the phase label can move to phase-complete-with-waiver"
+  ],
+  "turn_log": [
+    {
+      "at": "2026-09-03T20:04:11Z",
+      "user_message_brief": "Check app against master prompt v15.6.0; fix issues; adapt what's beneficial.",
+      "actions_taken": [
+        "read spec",
+        "gap analysis",
+        "domain module extraction",
+        "unit tests added (found+fixed real bug)",
+        "rate limiting added",
+        "charter/verification/waivers/memory records written",
+        "full gate run with evidence"
+      ],
+      "outcomes": "All required preview gates passed or blocked-with-proposed-waiver; build+tests green; SSE/CRUD/rate-limit verified live.",
+      "new_blockers": [],
+      "unresolved": [
+        "waiver confirmations",
+        "GitHub/Render/Supabase deployment of this version"
+      ]
+    },
+    {
+      "at": "2026-09-03T21:09:26Z",
+      "user_message_brief": "Chose Option 4: eliminate Render cold-start by porting to Cloudflare Workers + Supabase.",
+      "actions_taken": [
+        "added dual-runtime data facade lib/data.js",
+        "migrated trending/radar/all API routes off direct pg",
+        "client realtime auto-selects SSE vs Supabase WebSockets",
+        "OpenNext+wrangler configured; worker bundle builds",
+        "Next 16.3.1->16.3.4",
+        "supabase schema SQL + idempotent seed script",
+        "full pg-mode regression: health/search/cross-links/quiz/stats/CRUD/SSE all pass"
+      ],
+      "outcomes": "Worker bundle compiles (.open-next/worker.js); Node runtime fully regression-tested; supabase mode code-complete but unverified without live credentials.",
+      "new_blockers": [
+        "supabase-mode E2E requires user's Supabase project (no credentials in workspace \u2014 correctly so)"
+      ],
+      "unresolved": [
+        "OI-6 deployment steps",
+        "waivers W-001/W-002"
+      ]
+    },
+    {
+      "at": "2026-09-07T12:50:54Z",
+      "user_message_brief": "Asked if more terms are missing; approved full expansion (option 1).",
+      "actions_taken": [
+        "forced radar scan: Bark/Axis 0 new (fully covered)",
+        "broad candidate sweep found ~80 gaps",
+        "verified ~75 citations via MediaWiki API + Wikipedia HTTP checks",
+        "dropped unverifiable candidates (we ball, pack watch, nic sick, etc.)",
+        "wrote lib/packs-v7.js (67 terms), wired into db.js + seed-supabase.mjs",
+        "seeded: 670 -> 737 terms, 0 duplicates",
+        "tests 10/10, build clean, server restarted"
+      ],
+      "outcomes": "737 terms total. Safety pack now covers AI-era threats (nudify apps, deepfakes, pig butchering, sextortion-adjacent), current substances (Zyn, galaxy gas, tianeptine, fent/tranq), and viral challenges. Gaming got competitive/Twitch culture; coding got the AI vocabulary; corporate got workplace trends.",
+      "new_blockers": [],
+      "unresolved": [
+        "waivers W-001/W-002",
+        "OI-6 Cloudflare deploy",
+        "GitHub upload of v7"
+      ]
+    },
+    {
+      "at": "2026-09-07T13:15:12Z",
+      "user_message_brief": "Expand emoji slang; verify mobile-friendliness, touch, rendering.",
+      "actions_taken": [
+        "fetched Bark drug-emoji + sexting-code guides",
+        "added lib/packs-v8.js: 22 emoji codes (drug codes: plants/snowflake/pill-blues-fentanyl warning/syringe/grapes-lean/candy-MDMA/plug/onion-ounce; sexting: banana/cat-face/peanuts/circle-anger/pornhub-squares/seggs)",
+        "wired v8 into db.js + seed-supabase.mjs; total 737 -> 759",
+        "built 22-check Playwright mobile audit (iPhone 13, real touch events)",
+        "found + fixed A-Z rail hit targets (26x16 -> 36x26)",
+        "final run: 22/22 passed"
+      ],
+      "outcomes": "Emoji pack 32 -> 54 entries. Mobile audit green: touch taps on tabs/cards/save/dice/quiz/notes, no horizontal overflow on any page, viewport meta correct, no sub-10px text, note autosave works via touch keyboard.",
+      "new_blockers": [],
+      "unresolved": [
+        "waivers W-001/W-002",
+        "OI-6 Cloudflare deploy",
+        "GitHub upload"
+      ]
+    },
+    {
+      "at": "2026-09-07T13:27:55Z",
+      "user_message_brief": "What else is missing from Bark/Axis? Noted emoji should have been caught earlier \u2014 process gap.",
+      "actions_taken": [
+        "acknowledged process gap: radar only watched 2 flagship pages",
+        "ingested 3 uningested guides: Bark Gaming Terms, Axis Emoji Guide, Axis Back-to-School Fall 2026",
+        "wrote lib/packs-v9.js (~78 terms incl. radar catches: carts/pen/Special K/accountant/clapping cheeks/leg booty; almond mom/butter mom/clanker/-maxxing/passenger princess; 25 Axis emoji tone codes incl. thumbs-up-is-passive-aggressive)",
+        "extended radar from 2 to 7 watched source pages",
+        "tuned noise filters in domain module (page furniture)",
+        "final scan: 7/7 sources clean, 0 candidates",
+        "838 terms, 0 dupes, tests 10/10"
+      ],
+      "outcomes": "Radar now structurally watches every known Bark/Axis guide page daily \u2014 the class of miss the user flagged cannot silently recur for these sources.",
+      "new_blockers": [],
+      "unresolved": [
+        "waivers W-001/W-002",
+        "OI-6 Cloudflare deploy",
+        "GitHub upload"
+      ]
+    },
+    {
+      "at": "2026-09-07T13:42:53Z",
+      "user_message_brief": "Collapse daily verification notice (expandable); scan Bark/Axis for NEW articles, not just known pages.",
+      "actions_taken": [
+        "Trending verification panel now collapsed <details> with one-line status summary (sources ok, matches, new-guide + candidate counts); expands to full detail",
+        "added discovery layer: radar scans Bark blog index + Axis cultural-issues index for new guide-looking URLs (slang/emoji/terms/codes slug hints), reports them as new-article candidates \u2014 never auto-ingests",
+        "discovery immediately found bark.us/blog/tiktok-slang/ \u2014 ingested it (+6 terms: FYP, say sike rn, it's-the-for-me, it-really-do-be-like-that, credit card slam emoji, P\u2b50 code) and promoted it to watched sources (now 8 guides + 2 indexes)",
+        "tuned noise filters (emails, page furniture)",
+        "final scan fully clean: 8/8 guides, 2/2 indexes, 0 candidates",
+        "844 terms, 0 dupes"
+      ],
+      "outcomes": "Verification UI compact by default; radar now discovers new articles instead of only watching known ones. Discovery proved itself on first run by finding a real untracked guide.",
+      "new_blockers": [],
+      "unresolved": [
+        "waivers W-001/W-002",
+        "OI-6 Cloudflare deploy",
+        "GitHub upload"
+      ]
+    }
+  ],
+  "archived": [
+    {
+      "id": "OI-2",
+      "item": "Add prefers-reduced-motion media query for shimmer/pulse animations (a11y partial)",
+      "opened_at": "2026-09-03T20:04:11Z",
+      "resolved_at": "2026-09-03T20:04:19Z",
+      "resolution": "prefers-reduced-motion media query added to globals.css"
+    },
+    {
+      "id": "OI-4",
+      "item": "Render deploy still on old SQLite build; needs DATABASE_URL env (Supabase session pooler, port 5432) after repo update",
+      "opened_at": "2026-09-03T20:04:11Z",
+      "resolved_at": "2026-09-03T21:09:26Z",
+      "resolution": "Superseded: user chose Option 4 (Cloudflare Workers + Supabase). Render is now the secondary target."
+    }
+  ]
+}

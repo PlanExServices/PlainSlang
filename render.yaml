@@ -1,4 +1,7 @@
-# Render.com blueprint — PlainSlang server edition (free tier).
+# Render.com blueprint — PlainSlang server edition (free tier + Supabase Postgres).
+# 1. Create a free Supabase project, copy its connection string (Session pooler,
+#    port 5432 — NOT the transaction pooler on 6543, LISTEN/NOTIFY needs sessions).
+# 2. In Render: set DATABASE_URL as a secret env var on this service.
 services:
   - type: web
     name: plainslang
@@ -9,3 +12,5 @@ services:
     envVars:
       - key: NODE_VERSION
         value: 20.20.2
+      - key: DATABASE_URL
+        sync: false # set in dashboard — Supabase connection string (secret)

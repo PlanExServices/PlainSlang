@@ -5,13 +5,23 @@
   "scripts": {
     "dev": "next dev -H 0.0.0.0 -p 3000",
     "build": "next build",
-    "start": "next start -H 0.0.0.0 -p 3000"
+    "start": "next start -H 0.0.0.0 -p 3000",
+    "test": "node --test __tests__/",
+    "preview:cf": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+    "seed:supabase": "node scripts/seed-supabase.mjs"
   },
   "dependencies": {
-    "better-sqlite3": "^12.11.1",
+    "@supabase/supabase-js": "^2.109.0",
     "drizzle-orm": "^0.45.2",
-    "next": "^16.3.1",
+    "next": "^16.3.4",
+    "pg": "^8.23.0",
+    "pg-cloudflare": "^1.4.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@opennextjs/cloudflare": "^1.20.6",
+    "wrangler": "^4.129.0"
   }
 }

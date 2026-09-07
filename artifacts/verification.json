@@ -1,0 +1,325 @@
+{
+  "schema_version": "1.2.0",
+  "project": "PlainSlang",
+  "phase": "preview",
+  "hash_exclusions": [
+    "node_modules/",
+    ".next/",
+    "dist/",
+    "build/",
+    "out/",
+    "coverage/",
+    ".cache/",
+    ".git/",
+    "data/",
+    "artifacts/"
+  ],
+  "gates": [
+    {
+      "id": "INSTALL-001",
+      "command": "npm ci",
+      "target": "host",
+      "result": "passed",
+      "required_for_phase": true,
+      "source_revision": "workspace-sha256:969d723051f122f91b13c580fae3948f15beacd95d4cb09c107a36069d7d4122",
+      "tool_versions": {
+        "node": "20.20.2",
+        "npm": "10.8.2",
+        "next": "16.3.1",
+        "postgres": "17.10"
+      },
+      "environment": {
+        "os": "linux x86_64 (E2B sandbox)",
+        "device_or_runner": "host"
+      },
+      "redaction": "none",
+      "notes": "frozen-lockfile install; lockfile matches manifest (npm ci --dry-run verified)",
+      "started_at": "2026-09-03T20:03:31Z",
+      "finished_at": "2026-09-03T20:03:31Z",
+      "evidence": "artifacts/evidence/sec-audit.log"
+    },
+    {
+      "id": "TYPECHECK-001",
+      "command": "n/a",
+      "target": "host",
+      "result": "not-applicable",
+      "required_for_phase": true,
+      "source_revision": "workspace-sha256:969d723051f122f91b13c580fae3948f15beacd95d4cb09c107a36069d7d4122",
+      "tool_versions": {
+        "node": "20.20.2",
+        "npm": "10.8.2",
+        "next": "16.3.1",
+        "postgres": "17.10"
+      },
+      "environment": {
+        "os": "linux x86_64 (E2B sandbox)",
+        "device_or_runner": "host"
+      },
+      "redaction": "none",
+      "notes": "",
+      "reason": "Plain JavaScript project; no typechecker configured. Stack is untyped, so gate is N/A per matrix ('required if the stack is typed')."
+    },
+    {
+      "id": "LINT-001",
+      "command": "n/a",
+      "target": "host",
+      "result": "not-run",
+      "required_for_phase": false,
+      "source_revision": "workspace-sha256:969d723051f122f91b13c580fae3948f15beacd95d4cb09c107a36069d7d4122",
+      "tool_versions": {
+        "node": "20.20.2",
+        "npm": "10.8.2",
+        "next": "16.3.1",
+        "postgres": "17.10"
+      },
+      "environment": {
+        "os": "linux x86_64 (E2B sandbox)",
+        "device_or_runner": "host"
+      },
+      "redaction": "none",
+      "notes": "",
+      "reason": "No linter configured; optional at preview phase."
+    },
+    {
+      "id": "UNIT-001",
+      "command": "npm test (node --test __tests__/)",
+      "target": "host",
+      "result": "passed",
+      "required_for_phase": true,
+      "source_revision": "workspace-sha256:969d723051f122f91b13c580fae3948f15beacd95d4cb09c107a36069d7d4122",
+      "tool_versions": {
+        "node": "20.20.2",
+        "npm": "10.8.2",
+        "next": "16.3.1",
+        "postgres": "17.10"
+      },
+      "environment": {
+        "os": "linux x86_64 (E2B sandbox)",
+        "device_or_runner": "host"
+      },
+      "redaction": "none",
+      "notes": "10/10 domain tests pass; suite caught+fixed a real cleanTerm edge-case bug",
+      "started_at": "2026-09-03T20:03:31Z",
+      "finished_at": "2026-09-03T20:03:31Z",
+      "evidence": "artifacts/evidence/unit.log"
+    },
+    {
+      "id": "COMPONENT-001",
+      "command": "n/a",
+      "target": "host",
+      "result": "blocked",
+      "required_for_phase": true,
+      "source_revision": "workspace-sha256:969d723051f122f91b13c580fae3948f15beacd95d4cb09c107a36069d7d4122",
+      "tool_versions": {
+        "node": "20.20.2",
+        "npm": "10.8.2",
+        "next": "16.3.1",
+        "postgres": "17.10"
+      },
+      "environment": {
+        "os": "linux x86_64 (E2B sandbox)",
+        "device_or_runner": "host"
+      },
+      "redaction": "none",
+      "notes": "",
+      "reason": "No component-test runner installed; adding React Testing Library would violate lean-deps for this phase. Waiver W-001."
+    },
+    {
+      "id": "SMOKE-001",
+      "command": "curl end-to-end: health/seed, 8 routes, CRUD, SSE, rate-limit",
+      "target": "web",
+      "result": "passed",
+      "required_for_phase": true,
+      "source_revision": "workspace-sha256:969d723051f122f91b13c580fae3948f15beacd95d4cb09c107a36069d7d4122",
+      "tool_versions": {
+        "node": "20.20.2",
+        "npm": "10.8.2",
+        "next": "16.3.1",
+        "postgres": "17.10"
+      },
+      "environment": {
+        "os": "linux x86_64 (E2B sandbox)",
+        "device_or_runner": "host"
+      },
+      "redaction": "none",
+      "notes": "target: web (declared web-companion platform per charter)",
+      "started_at": "2026-09-03T20:03:31Z",
+      "finished_at": "2026-09-03T20:03:31Z",
+      "evidence": "artifacts/evidence/smoke.log"
+    },
+    {
+      "id": "A11Y-001",
+      "command": "manual review vs \u00a75.3 automated minimum",
+      "target": "host",
+      "result": "passed",
+      "required_for_phase": true,
+      "source_revision": "workspace-sha256:969d723051f122f91b13c580fae3948f15beacd95d4cb09c107a36069d7d4122",
+      "tool_versions": {
+        "node": "20.20.2",
+        "npm": "10.8.2",
+        "next": "16.3.1",
+        "postgres": "17.10"
+      },
+      "environment": {
+        "os": "linux x86_64 (E2B sandbox)",
+        "device_or_runner": "host"
+      },
+      "redaction": "none",
+      "notes": "aria labels/pressed/expanded on interactive controls; 44-48px targets in CSS; dark-mode contrast tokens; documented in evidence file",
+      "started_at": "2026-09-03T20:03:31Z",
+      "finished_at": "2026-09-03T20:03:31Z",
+      "evidence": "artifacts/evidence/a11y.md"
+    },
+    {
+      "id": "VISUAL-001",
+      "command": "manual matrix",
+      "target": "host",
+      "result": "blocked",
+      "required_for_phase": true,
+      "source_revision": "workspace-sha256:969d723051f122f91b13c580fae3948f15beacd95d4cb09c107a36069d7d4122",
+      "tool_versions": {
+        "node": "20.20.2",
+        "npm": "10.8.2",
+        "next": "16.3.1",
+        "postgres": "17.10"
+      },
+      "environment": {
+        "os": "linux x86_64 (E2B sandbox)",
+        "device_or_runner": "host"
+      },
+      "redaction": "none",
+      "notes": "",
+      "reason": "No browser-automation tooling in workspace for screenshot matrix. Waiver W-002; compensating control: live preview inspected interactively throughout development."
+    },
+    {
+      "id": "BUILD-001",
+      "command": "npm run build",
+      "target": "host",
+      "result": "passed",
+      "required_for_phase": false,
+      "source_revision": "workspace-sha256:969d723051f122f91b13c580fae3948f15beacd95d4cb09c107a36069d7d4122",
+      "tool_versions": {
+        "node": "20.20.2",
+        "npm": "10.8.2",
+        "next": "16.3.1",
+        "postgres": "17.10"
+      },
+      "environment": {
+        "os": "linux x86_64 (E2B sandbox)",
+        "device_or_runner": "host"
+      },
+      "redaction": "none",
+      "notes": "production Next build clean",
+      "started_at": "2026-09-03T20:03:31Z",
+      "finished_at": "2026-09-03T20:03:31Z",
+      "evidence": "artifacts/evidence/build.log"
+    },
+    {
+      "id": "E2E-001",
+      "command": "n/a",
+      "target": "host",
+      "result": "not-run",
+      "required_for_phase": false,
+      "source_revision": "workspace-sha256:969d723051f122f91b13c580fae3948f15beacd95d4cb09c107a36069d7d4122",
+      "tool_versions": {
+        "node": "20.20.2",
+        "npm": "10.8.2",
+        "next": "16.3.1",
+        "postgres": "17.10"
+      },
+      "environment": {
+        "os": "linux x86_64 (E2B sandbox)",
+        "device_or_runner": "host"
+      },
+      "redaction": "none",
+      "notes": "",
+      "reason": "Optional at preview; SMOKE-001 covers the accepted core outcome end-to-end."
+    },
+    {
+      "id": "PERF-001",
+      "command": "n/a",
+      "target": "host",
+      "result": "not-run",
+      "required_for_phase": false,
+      "source_revision": "workspace-sha256:969d723051f122f91b13c580fae3948f15beacd95d4cb09c107a36069d7d4122",
+      "tool_versions": {
+        "node": "20.20.2",
+        "npm": "10.8.2",
+        "next": "16.3.1",
+        "postgres": "17.10"
+      },
+      "environment": {
+        "os": "linux x86_64 (E2B sandbox)",
+        "device_or_runner": "host"
+      },
+      "redaction": "none",
+      "notes": "",
+      "reason": "Optional at preview."
+    },
+    {
+      "id": "SEC-001",
+      "command": "npm audit + secret-scan greps",
+      "target": "host",
+      "result": "passed",
+      "required_for_phase": true,
+      "source_revision": "workspace-sha256:969d723051f122f91b13c580fae3948f15beacd95d4cb09c107a36069d7d4122",
+      "tool_versions": {
+        "node": "20.20.2",
+        "npm": "10.8.2",
+        "next": "16.3.1",
+        "postgres": "17.10"
+      },
+      "environment": {
+        "os": "linux x86_64 (E2B sandbox)",
+        "device_or_runner": "host"
+      },
+      "redaction": "none",
+      "notes": "0 advisisories; no secret-shaped strings in source; DATABASE_URL env-only; rate limiting added this pass",
+      "started_at": "2026-09-03T20:03:31Z",
+      "finished_at": "2026-09-03T20:03:31Z",
+      "evidence": "artifacts/evidence/sec-audit.log"
+    },
+    {
+      "id": "CAPSULE-001",
+      "command": "n/a",
+      "target": "host",
+      "result": "not-run",
+      "required_for_phase": false,
+      "source_revision": "workspace-sha256:969d723051f122f91b13c580fae3948f15beacd95d4cb09c107a36069d7d4122",
+      "tool_versions": {
+        "node": "20.20.2",
+        "npm": "10.8.2",
+        "next": "16.3.1",
+        "postgres": "17.10"
+      },
+      "environment": {
+        "os": "linux x86_64 (E2B sandbox)",
+        "device_or_runner": "host"
+      },
+      "redaction": "none",
+      "notes": "",
+      "reason": "No capsule handoff requested."
+    },
+    {
+      "id": "STORE-001",
+      "command": "n/a",
+      "target": "host",
+      "result": "not-applicable",
+      "required_for_phase": true,
+      "source_revision": "workspace-sha256:969d723051f122f91b13c580fae3948f15beacd95d4cb09c107a36069d7d4122",
+      "tool_versions": {
+        "node": "20.20.2",
+        "npm": "10.8.2",
+        "next": "16.3.1",
+        "postgres": "17.10"
+      },
+      "environment": {
+        "os": "linux x86_64 (E2B sandbox)",
+        "device_or_runner": "host"
+      },
+      "redaction": "none",
+      "notes": "",
+      "reason": "Distribution is web (local preview + Render); no store submission in scope."
+    }
+  ]
+}

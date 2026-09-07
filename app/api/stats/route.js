@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getDb } from '@/lib/db';
-import { rowToTerm } from '@/lib/trending';
+import { ensureReady, counts, allTermRows, rowToTerm } from '@/lib/data';
 
 export const dynamic = 'force-dynamic';
 
@@ -12,60 +11,59 @@ function nyDayOfYear() {
 }
 
 export async function GET() {
-  const { sqlite } = getDb();
+  try {
+    await ensureReady();
+    const c = await counts();
+    const all = await allTermRows();
 
-  const total = sqlite.prepare('SELECT COUNT(*) AS c FROM terms').get().c;
-  const trending = sqlite.prepare('SELECT COUNT(*) AS c FROM terms WHERE trending = 1').get().c;
-  const woty = sqlite.prepare('SELECT COUNT(*) AS c FROM terms WHERE is_woty = 1').get().c;
-  const custom = sqlite.prepare('SELECT COUNT(*) AS c FROM terms WHERE is_seed = 0').get().c;
+    const teen = all.filter((r) => r.category === 'teen');
+    const custom = all.filter((r) => !r.is_seed);
+    const woty = all.filter((r) => r.is_woty).length;
 
-  // Age/difficulty/tag charts describe the teen glossary only — jargon packs
-  // aren't age-graded and would skew the charts.
-  const byAge = sqlite
-    .prepare(`SELECT age_group AS g, COUNT(*) AS c FROM terms WHERE category = 'teen' GROUP BY age_group ORDER BY c DESC`)
-    .all();
-  const byDifficulty = sqlite
-    .prepare(`SELECT difficulty AS d, COUNT(*) AS c FROM terms WHERE category = 'teen' GROUP BY difficulty`)
-    .all();
+    const byAgeMap = {};
+    const byDiffMap = {};
+    const byCatMap = {};
+    const tagCounts = {};
+    for (const r of all) byCatMap[r.category] = (byCatMap[r.category] || 0) + 1;
+    for (const r of teen) {
+      byAgeMap[r.age_group] = (byAgeMap[r.age_group] || 0) + 1;
+      byDiffMap[r.difficulty] = (byDiffMap[r.difficulty] || 0) + 1;
+      try {
+        const tags = typeof r.tags === 'string' ? JSON.parse(r.tags || '[]') : r.tags || [];
+        for (const t of tags) tagCounts[t] = (tagCounts[t] || 0) + 1;
+      } catch { /* skip bad rows */ }
+    }
 
-  const byCategory = sqlite
-    .prepare('SELECT category AS k, COUNT(*) AS c FROM terms GROUP BY category')
-    .all();
+    const byAge = Object.entries(byAgeMap).map(([g, n]) => ({ g, c: n })).sort((a, b) => b.c - a.c);
+    const byDifficulty = Object.entries(byDiffMap).map(([d, n]) => ({ d, c: n }));
+    const byCategory = Object.entries(byCatMap).map(([k, n]) => ({ k, c: n }));
+    const topTags = Object.entries(tagCounts)
+      .sort((a, b) => b[1] - a[1]).slice(0, 14)
+      .map(([tag, count]) => ({ tag, count }));
 
-  // Tag counts (tags stored as JSON arrays)
-  const tagRows = sqlite.prepare(`SELECT tags FROM terms WHERE category = 'teen'`).all();
-  const tagCounts = {};
-  for (const r of tagRows) {
-    try {
-      for (const t of JSON.parse(r.tags || '[]')) {
-        tagCounts[t] = (tagCounts[t] || 0) + 1;
-      }
-    } catch { /* skip bad rows */ }
+    const seededTeen = teen.filter((r) => r.is_seed).sort((a, b) => a.id - b.id);
+    const sotd = seededTeen.length > 0
+      ? rowToTerm(seededTeen[nyDayOfYear() % seededTeen.length])
+      : null;
+
+    const newestCustom = custom
+      .sort((a, b) => String(b.created_at).localeCompare(String(a.created_at)))
+      .slice(0, 3)
+      .map(rowToTerm);
+
+    return NextResponse.json({
+      total: c.total,
+      trending: c.trending,
+      woty,
+      custom: custom.length,
+      byAge,
+      byDifficulty,
+      byCategory,
+      topTags,
+      slangOfTheDay: sotd,
+      newestCustom,
+    });
+  } catch (e) {
+    return NextResponse.json({ error: String(e.message || e) }, { status: 500 });
   }
-  const topTags = Object.entries(tagCounts)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 14)
-    .map(([tag, count]) => ({ tag, count }));
-
-  // Slang of the Day: deterministic by NY day-of-year over seeded teen terms
-  const seedRows = sqlite.prepare(`SELECT * FROM terms WHERE is_seed = 1 AND category = 'teen' ORDER BY id`).all();
-  const sotd = seedRows.length > 0 ? rowToTerm(seedRows[nyDayOfYear() % seedRows.length]) : null;
-
-  const newest = sqlite
-    .prepare('SELECT * FROM terms WHERE is_seed = 0 ORDER BY created_at DESC LIMIT 3')
-    .all()
-    .map(rowToTerm);
-
-  return NextResponse.json({
-    total,
-    trending,
-    woty,
-    custom,
-    byAge,
-    byDifficulty,
-    byCategory,
-    topTags,
-    slangOfTheDay: sotd,
-    newestCustom: newest,
-  });
 }

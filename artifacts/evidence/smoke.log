@@ -1,0 +1,23 @@
+=== SMOKE: seed + all pages + core flows ===
+{"ok":true,"db":"postgres","totalTerms":670,"seededTerms":670,"trendingTerms":5}
+/ -> 200
+/glossary -> 200
+/explore -> 200
+/explore/safety -> 200
+/trending -> 200
+/saved -> 200
+/add -> 200
+/term/1 -> 200
+=== rate limit verification (write bucket, limit 20/min) ===
+400 400 400 400 400 400 400 400 400 400 400 400 400 400 400 400 400 400 400 400 429 429 
+=== SSE still functional after refactor ===
+POST 429
+DELETE 308
+0
+POST 201
+DELETE 200
+SSE events captured:
+      2 event: db-change
+      1 event: hello
+      1 event: term-created
+      1 event: term-deleted

@@ -1,0 +1,24 @@
+PASS  seed count (incl v8 emoji wave) — total=759
+PASS  viewport meta present — width=device-width, initial-scale=1
+PASS  home: no horizontal overflow — overflowX=0px
+PASS  tab tap: Glossary — landed on /glossary
+PASS  tab tap: Explore — landed on /explore
+PASS  tab tap: Trending — landed on /trending
+PASS  tab tap: Saved — landed on /saved
+PASS  tab tap: Home — landed on /
+PASS  glossary search via touch keyboard — 1 results for "gyat"
+PASS  tap-to-expand card
+PASS  tap save button
+PASS  dice (surprise me) tap
+PASS  hit targets >= minimum — all pass
+PASS  glossary: no horizontal overflow — overflowX=0px
+PASS  A–Z rail tap scrolls
+PASS  emoji pack card count (v8 present) — 54 cards
+PASS  new v8 term (banana 🍌) findable
+PASS  emoji pack: no horizontal overflow — overflowX=0px
+PASS  quiz option tap registers
+PASS  term detail loads via touch
+PASS  note autosave on mobile — Saved to this browser ✓
+PASS  no text below 10px — 0 tiny elements
+
+===== 22/22 PASSED =====

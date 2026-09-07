@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation';
 import { AGE_GROUPS, ageGroupInfo, difficultyInfo } from '@/lib/constants';
 import { CATEGORIES, categoryInfo } from '@/lib/packs';
 import { getSavedIds, toggleSaved } from '@/lib/local';
+import { useLiveRefresh } from '@/lib/useLive';
+import LiveDot from '@/components/LiveDot';
 
 const DIFF_CHIPS = [
   { id: 'easy', label: '🟢 Easy' },
@@ -64,6 +66,9 @@ export default function TermBrowser({
     load();
     setSavedIds(getSavedIds());
   }, [load]);
+
+  // Real-time: silently refetch when any term changes or a verify completes.
+  const liveStatus = useLiveRefresh(() => load());
 
   const filtered = useMemo(() => {
     if (!all) return null;
@@ -214,6 +219,7 @@ export default function TermBrowser({
       {filtered && (
         <>
           <p className="count-line">
+            <LiveDot status={liveStatus} />{' '}
             {filtered.length} of {all.length} terms
             {activeFilterCount > 0 && (
               <>

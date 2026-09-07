@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.2.0",
+  "project": "PlainSlang",
+  "waivers": [
+    {
+      "id": "W-001",
+      "gate": "COMPONENT-001",
+      "phase": "preview",
+      "unmet_capability": "No component-test runner installed in workspace; installing React Testing Library + jsdom would add heavy dev dependencies mid-phase.",
+      "risk": "UI component regressions not caught by automated tests.",
+      "compensating_control": "SMOKE-001 exercises every page + interactive flow end-to-end against the running server; UNIT-001 covers all extracted domain logic.",
+      "approving_actor": "PlanExServices (project owner) \u2014 pending explicit confirmation; waiver inactive until confirmed",
+      "approved_at": null,
+      "expires_at": "2026-12-02T20:04:11Z",
+      "blocks_release": false,
+      "status": "proposed"
+    },
+    {
+      "id": "W-002",
+      "gate": "VISUAL-001",
+      "phase": "preview",
+      "unmet_capability": "No browser-automation/screenshot tooling available in workspace for a light/dark/scale matrix.",
+      "risk": "Visual regressions across themes/sizes not systematically captured.",
+      "compensating_control": "App is dark-mode-only single theme by design; live preview inspected interactively throughout development; layout is responsive flex/grid.",
+      "approving_actor": "PlanExServices (project owner) \u2014 pending explicit confirmation; waiver inactive until confirmed",
+      "approved_at": null,
+      "expires_at": "2026-12-02T20:04:11Z",
+      "blocks_release": false,
+      "status": "proposed"
+    }
+  ]
+}

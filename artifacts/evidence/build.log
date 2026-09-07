@@ -1,0 +1,45 @@
+
+> plainslang@1.0.0 build
+> next build
+
+▲ Next.js 16.3.1 (Turbopack)
+✓ Running next.config.mjs took 14ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 265ms
+  Running TypeScript ...
+  Finished TypeScript in 2ms ...
+  Collecting page data using 1 worker ...
+[plainslang] DATABASE_URL is not set — API routes will fail until it is.
+  Generating static pages using 1 worker (0/8) ...
+  Generating static pages using 1 worker (2/8) 
+  Generating static pages using 1 worker (4/8) 
+  Generating static pages using 1 worker (6/8) 
+✓ Generating static pages using 1 worker (8/8) in 287ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ○ /add
+├ ƒ /api/health
+├ ƒ /api/quiz
+├ ƒ /api/radar
+├ ƒ /api/stats
+├ ƒ /api/stream
+├ ƒ /api/terms
+├ ƒ /api/terms/[id]
+├ ƒ /api/trending
+├ ƒ /api/verify
+├ ○ /explore
+├ ƒ /explore/[pack]
+├ ○ /glossary
+├ ○ /saved
+├ ƒ /term/[id]
+├ ƒ /term/[id]/edit
+└ ○ /trending
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

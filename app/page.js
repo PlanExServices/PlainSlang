@@ -6,6 +6,7 @@ import AppHeader from '@/components/AppHeader';
 import { AGE_GROUPS, ageGroupInfo, difficultyInfo } from '@/lib/constants';
 import { CATEGORIES } from '@/lib/packs';
 import { getSavedIds } from '@/lib/local';
+import { useLiveRefresh } from '@/lib/useLive';
 
 const AGE_COLORS = {
   elementary: '#4ade80',
@@ -64,6 +65,9 @@ export default function DashboardPage() {
       setLoadingQuiz(false);
     }
   }, []);
+
+  // Real-time: stat tiles/charts refresh when terms change anywhere.
+  useLiveRefresh(() => loadStats());
 
   useEffect(() => {
     loadStats();

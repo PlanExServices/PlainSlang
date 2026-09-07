@@ -3,6 +3,8 @@
 import { useEffect, useState, useCallback } from 'react';
 import AppHeader from '@/components/AppHeader';
 import TermCard from '@/components/TermCard';
+import { useLiveRefresh } from '@/lib/useLive';
+import LiveDot from '@/components/LiveDot';
 
 export default function TrendingPage() {
   const [data, setData] = useState(null);
@@ -27,6 +29,10 @@ export default function TrendingPage() {
     load();
   }, [load]);
 
+  // Real-time: when any instance completes a verify (or terms change), refresh —
+  // without forcing a new feed fetch.
+  const liveStatus = useLiveRefresh(() => load(false));
+
   const trending = data?.trending;
   const radar = data?.radar;
   const status = trending?.status;
@@ -34,6 +40,14 @@ export default function TrendingPage() {
   const radarCandidates = radarStatus
     ? radarStatus.results.filter((r) => r.ok).flatMap((r) => r.newCandidates.map((t) => ({ t, s: r.source })))
     : [];
+  const discovery = radarStatus?.discovery || [];
+  const newArticles = discovery.filter((d) => d.ok).flatMap((d) => d.newGuideUrls.map((u) => ({ u, i: d.index })));
+  const newArticleCount = newArticles.length;
+  const feedSources = status?.sourcesChecked || [];
+  const guideSources = radarStatus?.results || [];
+  const sourceOkCount = feedSources.filter((s) => s.ok).length + guideSources.filter((r) => r.ok).length;
+  const sourceTotal = feedSources.length + guideSources.length;
+  const allSourcesOk = sourceTotal > 0 && sourceOkCount === sourceTotal;
 
   return (
     <>
@@ -59,9 +73,20 @@ export default function TrendingPage() {
 
         {data && (
           <>
-            {/* ---- Unified daily verification panel ---- */}
-            <div className="verify-panel">
-              <h4>🛡️ Daily verification — news feeds + parent guides</h4>
+            {/* ---- Unified daily verification panel (collapsed by default) ---- */}
+            <details className="verify-panel collapsible">
+              <summary className="verify-summary">
+                <span className="verify-summary-title">
+                  🛡️ Daily verification <LiveDot status={liveStatus} />
+                </span>
+                <span className="verify-summary-line">
+                  {status
+                    ? `${allSourcesOk ? '✓' : '⚠'} ${sourceOkCount}/${sourceTotal} sources · ${status.matchedCount} headline match${status.matchedCount === 1 ? '' : 'es'}${newArticleCount > 0 ? ` · 🆕 ${newArticleCount} new guide article${newArticleCount === 1 ? '' : 's'} found` : ''}${radarCandidates.length > 0 ? ` · ${radarCandidates.length} term candidate${radarCandidates.length === 1 ? '' : 's'}` : ''}`
+                    : 'not yet run — expand for details'}
+                </span>
+                <span className="verify-chevron" aria-hidden="true">▾</span>
+              </summary>
+              <div className="verify-body">
 
               {status ? (
                 <>
@@ -161,6 +186,36 @@ export default function TrendingPage() {
                 )}
               </div>
 
+              {/* ---- New-article discovery ---- */}
+              <div style={{ borderTop: '1px dashed var(--border)', marginTop: 10, paddingTop: 10 }}>
+                <div>🔭 New-guide discovery (index pages)</div>
+                <ul>
+                  {discovery.length === 0 && <li style={{ color: 'var(--text-faint)' }}>No discovery data yet — runs with the next verification.</li>}
+                  {discovery.map((d, i) => (
+                    <li key={i}>
+                      {d.ok ? (
+                        <span className={d.newGuideUrls.length ? 'source-warn' : 'source-ok'}>
+                          {d.newGuideUrls.length ? '🆕' : '✓'} {d.index} — {d.linksScanned} links scanned,{' '}
+                          {d.newGuideUrls.length === 0 ? 'no new guide articles' : `${d.newGuideUrls.length} possible new guide${d.newGuideUrls.length === 1 ? '' : 's'}`}
+                        </span>
+                      ) : (
+                        <span className="source-fail">✕ {d.index} — {d.error}</span>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+                {newArticles.length > 0 && (
+                  <ul>
+                    {newArticles.map((a, i) => (
+                      <li key={i}>
+                        <a href={a.u} target="_blank" rel="noopener noreferrer">{a.u}</a>{' '}
+                        <em style={{ color: 'var(--text-faint)' }}>— review &amp; add to watched sources if it’s a slang guide</em>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+
               <details style={{ marginTop: 10 }}>
                 <summary style={{ cursor: 'pointer', fontWeight: 600 }}>How this works</summary>
                 <ul>
@@ -195,7 +250,8 @@ export default function TrendingPage() {
                   {refreshing ? 'Verifying feeds & guides…' : '🛡️ Verify now'}
                 </button>
               </div>
-            </div>
+              </div>
+            </details>
 
             <p className="count-line">
               {trending?.terms?.length ?? 0} trending term{(trending?.terms?.length ?? 0) === 1 ? '' : 's'}

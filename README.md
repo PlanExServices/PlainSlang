@@ -27,6 +27,7 @@ A free, no-login web app that translates teen and Gen Alpha slang into plain Eng
 - **🔗 Cross-category links** — terms live in one place but appear in every pack they relate to (e.g. *sus* shows in teen, gaming, and texting), with "Lives in:" chips to hop between packs.
 - **🏠 Dashboard home** — Slang of the Day, a "Do you speak teen?" quiz with parent ranks (Certified Rizzler → NPC Energy), stat tiles, and charts.
 - **🔥 Trending, verified** — we never invent what's hot (see below).
+- **⚡ Real-time refresh** — every open browser updates instantly (SSE + Postgres LISTEN/NOTIFY): add/edit a term or run a verify anywhere — including straight from the Supabase dashboard — and all pages refresh live, marked by a LIVE dot.
 - **🔖 Saved & notes** — bookmarks and private notes stored in `localStorage` on your browser only.
 
 ## Daily verification — one process, two checks
@@ -44,7 +45,7 @@ Every seeded term cites a published source: Bark's 2026 parent guides, Axis's 20
 
 ## Stack
 
-Next.js 16 (App Router) · React 19 · SQLite (better-sqlite3) · Drizzle ORM schema · plain CSS design tokens (no CSS framework)
+Next.js 16 (App Router) · React 19 · **PostgreSQL (Supabase)** via `pg` · Drizzle ORM schema · Server-Sent Events realtime · plain CSS design tokens (no CSS framework)
 
 ## Getting started
 
@@ -56,11 +57,30 @@ npm start        # binds 0.0.0.0:3000
 
 Dev mode: `npm run dev`
 
-The SQLite database is created and seeded automatically on the first request (or hit `GET /api/health` to trigger it). Set `PLAINSLANG_DB_PATH` to relocate the database file; it defaults to `data/plainslang.db`.
+Set `DATABASE_URL` to a PostgreSQL connection string before starting — a free [Supabase](https://supabase.com) project works out of the box (use the **Session pooler** string on port 5432, *not* the transaction pooler on 6543, so LISTEN/NOTIFY realtime works). The schema is created and all 670 terms are seeded automatically on the first request (`GET /api/health` triggers it).
+
+```bash
+export DATABASE_URL="postgresql://postgres.<ref>:<password>@aws-0-<region>.pooler.supabase.com:5432/postgres"
+```
 
 ## Deploying
 
-This is a **server application** (Node + SQLite + live feed verification) — it needs a Node host, not static hosting. GitHub Pages cannot run it.
+Two supported targets — same codebase, the data layer picks its mode from env vars:
+
+### Cloudflare Workers (recommended — no cold-start sleep, free tier)
+
+The app runs at the edge via [OpenNext](https://opennext.js.org/cloudflare); data + realtime come from Supabase over HTTP/WebSockets (no TCP sockets needed).
+
+1. **Supabase:** create a free project → SQL Editor → run `scripts/supabase-schema.sql` (tables, read-only RLS for the public key, Realtime publication).
+2. **Seed:** `SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=... npm run seed:supabase` (one-time; idempotent).
+3. **Configure:** put your project URL + anon key in `wrangler.jsonc` `vars` (they're public-safe; RLS restricts them to reads). Store the private key as a secret: `npx wrangler secret put SUPABASE_URL` and `npx wrangler secret put SUPABASE_SERVICE_ROLE_KEY`.
+4. **Deploy:** `npx wrangler login && npm run deploy`. Your app is live at `https://plainslang.<your-subdomain>.workers.dev` — always warm, no sleep.
+
+In this mode browsers get realtime straight from **Supabase Realtime** (WebSockets); the SSE endpoint is unused.
+
+### Node host (Render / Docker / VPS)
+
+Set `DATABASE_URL` to any Postgres (Supabase session pooler on port 5432 works) and the app uses the `pg` driver with LISTEN/NOTIFY → SSE realtime. `render.yaml` and `Dockerfile` are included. GitHub Pages cannot run it (static hosting).
 
 - **Render (recommended):** the included `render.yaml` is a one-click blueprint — Dashboard → New → Blueprint → connect this repo. On a paid plan the persistent disk keeps your database (and user-added terms) across deploys; on the free plan the app reseeds its full library on each deploy.
 - **Docker (any host — Railway, Fly.io, a VPS):** `docker build -t plainslang . && docker run -p 3000:3000 -v plainslang-data:/data plainslang`
@@ -81,6 +101,7 @@ This is a **server application** (Node + SQLite + live feed verification) — it
 | GET | `/api/stats` | Dashboard stats |
 | GET | `/api/quiz` | Random quiz question (real definitions as decoys) |
 | GET | `/api/health` | Seed + counts |
+| GET | `/api/stream` | **Server-Sent Events** — live updates (term CRUD, verify, radar, direct DB edits) |
 
 ## Project layout
 

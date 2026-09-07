@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { refreshTrending, getTrendingStatus } from '@/lib/trending';
 import { runRadar, getRadarStatus } from '@/lib/radar';
+import { rateLimit } from '@/lib/ratelimit';
 
 export const dynamic = 'force-dynamic';
 
@@ -10,6 +11,11 @@ export const dynamic = 'force-dynamic';
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const force = searchParams.get('force') === '1';
+  if (force) {
+    // Forced verifies hit 4 external sites — cap them per IP (abuse prevention).
+    const limited = rateLimit(request, 'verify', 4, 300_000); // 4 forced runs / 5 min / IP
+    if (limited) return limited;
+  }
 
   const [trendingResult, radarResult] = await Promise.allSettled([
     refreshTrending({ force }),

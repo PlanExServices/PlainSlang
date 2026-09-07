@@ -1,0 +1,68 @@
+
+> plainslang@1.0.0 test
+> node --test __tests__/
+
+TAP version 13
+# (node:5381) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///home/user/plainslang/lib/domain/matching.js is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /home/user/plainslang/package.json.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: decodeEntities decodes the five common entities
+ok 1 - decodeEntities decodes the five common entities
+  ---
+  duration_ms: 1.319586
+  ...
+# Subtest: extractItems parses plain and CDATA titles with links
+ok 2 - extractItems parses plain and CDATA titles with links
+  ---
+  duration_ms: 0.877518
+  ...
+# Subtest: stripTags removes scripts, styles, and markup
+ok 3 - stripTags removes scripts, styles, and markup
+  ---
+  duration_ms: 1.751588
+  ...
+# Subtest: termInText matches whole words only
+ok 4 - termInText matches whole words only
+  ---
+  duration_ms: 0.433936
+  ...
+# Subtest: termInText survives regex-special characters in terms
+ok 5 - termInText survives regex-special characters in terms
+  ---
+  duration_ms: 0.225553
+  ...
+# Subtest: AMBIGUOUS set contains common-word traps
+ok 6 - AMBIGUOUS set contains common-word traps
+  ---
+  duration_ms: 0.14821
+  ...
+# Subtest: cleanTerm keeps real headwords
+ok 7 - cleanTerm keeps real headwords
+  ---
+  duration_ms: 0.758437
+  ...
+# Subtest: cleanTerm rejects noise
+ok 8 - cleanTerm rejects noise
+  ---
+  duration_ms: 0.181119
+  ...
+# Subtest: normKey collapses punctuation variants to one key
+ok 9 - normKey collapses punctuation variants to one key
+  ---
+  duration_ms: 0.469789
+  ...
+# Subtest: safeJson parses valid JSON and falls back on garbage
+ok 10 - safeJson parses valid JSON and falls back on garbage
+  ---
+  duration_ms: 0.326631
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 79.114963

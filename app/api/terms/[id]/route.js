@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
-import { getDb } from '@/lib/db';
-import { rowToTerm } from '@/lib/trending';
+import { ensureReady, getTerm, updateTerm, deleteTerm } from '@/lib/data';
 import { validateTermInput } from '@/lib/validate';
+import { emitEvent } from '@/lib/events';
+import { rateLimit } from '@/lib/ratelimit';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,13 +14,19 @@ function getId(params) {
 export async function GET(_request, { params }) {
   const id = getId(await params);
   if (!id) return NextResponse.json({ error: 'Invalid id' }, { status: 400 });
-  const { sqlite } = getDb();
-  const row = sqlite.prepare('SELECT * FROM terms WHERE id = ?').get(id);
-  if (!row) return NextResponse.json({ error: 'Term not found' }, { status: 404 });
-  return NextResponse.json({ term: rowToTerm(row) });
+  try {
+    await ensureReady();
+    const term = await getTerm(id);
+    if (!term) return NextResponse.json({ error: 'Term not found' }, { status: 404 });
+    return NextResponse.json({ term });
+  } catch (e) {
+    return NextResponse.json({ error: String(e.message || e) }, { status: 500 });
+  }
 }
 
 export async function PUT(request, { params }) {
+  const limited = rateLimit(request, 'write', 20, 60_000);
+  if (limited) return limited;
   const id = getId(await params);
   if (!id) return NextResponse.json({ error: 'Invalid id' }, { status: 400 });
   let body;
@@ -31,30 +38,29 @@ export async function PUT(request, { params }) {
   const { ok, errors, clean } = validateTermInput(body);
   if (!ok) return NextResponse.json({ error: 'Validation failed', errors }, { status: 400 });
 
-  const { sqlite } = getDb();
-  const existing = sqlite.prepare('SELECT * FROM terms WHERE id = ?').get(id);
-  if (!existing) return NextResponse.json({ error: 'Term not found' }, { status: 404 });
-
-  sqlite
-    .prepare(
-      `UPDATE terms SET term = ?, emoji = ?, definition = ?, example = ?, notes = ?,
-        age_group = ?, difficulty = ?, say = ?, source_name = ?, source_url = ?, tags = ?, category = ?, updated_at = ?
-       WHERE id = ?`
-    )
-    .run(
-      clean.term, clean.emoji, clean.definition, clean.example, clean.notes,
-      clean.ageGroup, clean.difficulty, clean.say, clean.sourceName, clean.sourceUrl,
-      JSON.stringify(clean.tags), body.category ? clean.category : existing.category, new Date().toISOString(), id
-    );
-  const row = sqlite.prepare('SELECT * FROM terms WHERE id = ?').get(id);
-  return NextResponse.json({ term: rowToTerm(row) });
+  try {
+    await ensureReady();
+    const term = await updateTerm(id, clean, !body.category);
+    if (!term) return NextResponse.json({ error: 'Term not found' }, { status: 404 });
+    emitEvent('term-updated', { id: term.id, term: term.term, category: term.category });
+    return NextResponse.json({ term });
+  } catch (e) {
+    return NextResponse.json({ error: String(e.message || e) }, { status: 500 });
+  }
 }
 
-export async function DELETE(_request, { params }) {
+export async function DELETE(request, { params }) {
+  const limited = rateLimit(request, 'write', 20, 60_000);
+  if (limited) return limited;
   const id = getId(await params);
   if (!id) return NextResponse.json({ error: 'Invalid id' }, { status: 400 });
-  const { sqlite } = getDb();
-  const result = sqlite.prepare('DELETE FROM terms WHERE id = ?').run(id);
-  if (result.changes === 0) return NextResponse.json({ error: 'Term not found' }, { status: 404 });
-  return NextResponse.json({ deleted: true });
+  try {
+    await ensureReady();
+    const name = await deleteTerm(id);
+    if (name === null) return NextResponse.json({ error: 'Term not found' }, { status: 404 });
+    emitEvent('term-deleted', { id, term: name });
+    return NextResponse.json({ deleted: true });
+  } catch (e) {
+    return NextResponse.json({ error: String(e.message || e) }, { status: 500 });
+  }
 }
