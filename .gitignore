@@ -17,3 +17,7 @@
 .DS_Store
 npm-debug.log*
 *.tsbuildinfo
+
+# cloudflare / opennext build output
+/.open-next
+/.wrangler

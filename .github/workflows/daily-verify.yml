@@ -1,0 +1,49 @@
+# PlainSlang — daily verification & republish (backend-free edition).
+# Every morning (6am ET) this job:
+#   1. rebuilds the term list from the seed files in git
+#   2. runs the LIVE trending verification (Google News + Merriam-Webster)
+#   3. runs the guide radar (9 Bark/Axis pages) + new-article discovery (2 indexes)
+#   4. writes site/data.json and commits it if anything changed
+# Cloudflare Pages (or GitHub Pages) auto-deploys on the commit.
+# Ground-truth rules preserved: definitions are never auto-written; radar output
+# is review-only and shown in the site's verification panel.
+
+name: Daily verification
+
+on:
+  schedule:
+    # 10:00 UTC = 6am ET (EDT). Note: cron is UTC; during EST winter this runs 5am ET.
+    - cron: '0 10 * * *'
+  workflow_dispatch: {} # manual "Verify now" from the Actions tab
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # No npm install needed — the script only uses Node built-ins + fetch.
+      - name: Run daily verification
+        run: node scripts/daily-verify.mjs
+
+      - name: Commit refreshed data.json
+        run: |
+          git config user.name "plainslang-daily-verify"
+          git config user.email "actions@users.noreply.github.com"
+          git add site/data.json
+          if git diff --cached --quiet; then
+            echo "No changes today."
+          else
+            DAY="$(date -u +%Y-%m-%d)"
+            git commit -m "Daily verification: ${DAY}"
+            # race-safe push (another commit may have landed mid-run)
+            git pull --rebase origin main || true
+            git push
+          fi
