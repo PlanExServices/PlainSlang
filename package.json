@@ -7,9 +7,8 @@
     "build": "next build",
     "start": "next start -H 0.0.0.0 -p 3000",
     "test": "node --test __tests__/",
-    "preview:cf": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
-    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
-    "seed:supabase": "node scripts/seed-supabase.mjs"
+    "seed:supabase": "node scripts/seed-supabase.mjs",
+    "deploy:workers-edition": "cd deploy/workers-edition && echo \"See deploy/workers-edition/README \u2014 copy configs to root first\" && exit 1"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.109.0",
