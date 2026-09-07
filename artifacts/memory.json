@@ -4,7 +4,7 @@
   "current_phase": "preview",
   "current_completion_label": "incomplete",
   "accepted_core_outcome": "Visitor searches/browses a slang term and reads a plain-English, source-cited definition; trending list verified against live feeds.",
-  "last_turn_summary": "Fixed Workers 500: static fallback was fs-reading site/data.json (no fs on Workers). Now bundles data.json at build time \u2014 verified in Node (health/stats 200 no-env) and in the rebuilt worker bundle (data present). wrangler+opennext configs restored to root for CF git-integration builds.",
+  "last_turn_summary": "CF Workers Builds misconfigured: build step didn't run the OpenNext build. Added build:cf script; user must set dashboard Build command to 'npx opennextjs-cloudflare build' and keep Deploy command 'npx wrangler deploy'.",
   "open_items": [
     {
       "id": "OI-1",
@@ -277,6 +277,20 @@
       "new_blockers": [],
       "unresolved": [
         "user: push updated files"
+      ]
+    },
+    {
+      "at": "2026-09-07T18:06:09Z",
+      "user_message_brief": "CF deploy log: 'Could not find compiled Open Next config' at deploy step.",
+      "actions_taken": [
+        "diagnosed from log: CF Workers Builds ran deploy (npx wrangler deploy) but build step never ran opennextjs-cloudflare build, so .open-next/ was missing",
+        "added npm run build:cf script",
+        "verified locally: exact command produces .open-next/worker.js"
+      ],
+      "outcomes": "User must set CF dashboard Build command to 'npx opennextjs-cloudflare build' (deploy command stays npx wrangler deploy).",
+      "new_blockers": [],
+      "unresolved": [
+        "user: fix CF build settings + push"
       ]
     }
   ],
