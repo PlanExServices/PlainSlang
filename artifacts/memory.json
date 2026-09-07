@@ -4,7 +4,7 @@
   "current_phase": "preview",
   "current_completion_label": "incomplete",
   "accepted_core_outcome": "Visitor searches/browses a slang term and reads a plain-English, source-cited definition; trending list verified against live feeds.",
-  "last_turn_summary": "Collapsed verify panel (expandable details with one-line summary). Radar upgraded with new-article discovery: scans Bark/Axis index pages for unknown guide URLs; found + ingested TikTok Slang guide on first run. Now 8 watched guides + 2 discovery indexes, all clean. 844 terms.",
+  "last_turn_summary": "Option A shipped: static site (site/) + daily GitHub Action running full live verification (news feeds + 9 guides + discovery). 844 terms deterministic from seeds. 17/17 mobile audit. User deploys via Cloudflare Pages, output dir 'site'.",
   "open_items": [
     {
       "id": "OI-1",
@@ -17,14 +17,9 @@
       "opened_at": "2026-09-03T20:04:11Z"
     },
     {
-      "id": "OI-5",
-      "item": "Open CRUD without auth is accepted preview risk; add write token before production-candidate",
-      "opened_at": "2026-09-03T20:04:11Z"
-    },
-    {
-      "id": "OI-6",
-      "item": "User must run Cloudflare deployment steps: Supabase project + schema.sql + seed script + wrangler secrets + npm run deploy (agent has no Cloudflare/Supabase credentials \u2014 MANUAL)",
-      "opened_at": "2026-09-03T21:09:26Z"
+      "id": "OI-7",
+      "item": "User: push repo to GitHub, enable the daily-verify Action, connect Cloudflare Pages (output dir: site)",
+      "opened_at": "2026-09-07T14:22:20Z"
     }
   ],
   "next_actions": [
@@ -58,6 +53,10 @@
     {
       "path": "wrangler.jsonc",
       "summary": "Cloudflare Workers deploy via OpenNext; Next upgraded 16.3.1->16.3.4 to satisfy adapter peer range"
+    },
+    {
+      "path": "scripts/daily-verify.mjs + site/ + .github/workflows/daily-verify.yml",
+      "summary": "Option A adopted: backend-free architecture. Static SPA + data.json rebuilt daily by GitHub Action (live verification preserved). Server/Supabase editions remain in repo as optional."
     }
   ],
   "blockers": [],
@@ -188,6 +187,23 @@
         "OI-6 Cloudflare deploy",
         "GitHub upload"
       ]
+    },
+    {
+      "at": "2026-09-07T14:22:20Z",
+      "user_message_brief": "Approved Option A: no backend.",
+      "actions_taken": [
+        "scripts/daily-verify.mjs: builds 844 terms from seed waves (deterministic ids), live trending verify, 9-guide radar + 2-index discovery, writes site/data.json",
+        "site/index.html: full static SPA (all tabs, quiz, packs, saved/notes, collapsed verify panel with full evidence)",
+        "GitHub Action: daily 6am ET cron + manual dispatch, commits data.json only on change",
+        "noise-filter fix (Axis emoji page furniture)",
+        "static audit vs :8090: 17/17 touch checks passed"
+      ],
+      "outcomes": "Backend-free edition complete and verified. CRUD risk eliminated; hosting $0; verification integrity preserved with full evidence display.",
+      "new_blockers": [],
+      "unresolved": [
+        "waivers W-001/W-002",
+        "OI-7 user deploy steps"
+      ]
     }
   ],
   "archived": [
@@ -204,6 +220,20 @@
       "opened_at": "2026-09-03T20:04:11Z",
       "resolved_at": "2026-09-03T21:09:26Z",
       "resolution": "Superseded: user chose Option 4 (Cloudflare Workers + Supabase). Render is now the secondary target."
+    },
+    {
+      "id": "OI-5",
+      "item": "Open CRUD without auth is accepted preview risk; add write token before production-candidate",
+      "opened_at": "2026-09-03T20:04:11Z",
+      "resolved_at": "2026-09-07T14:22:20Z",
+      "resolution": "Superseded by backend-free static edition (no CRUD endpoints to abuse; no Supabase/Cloudflare Workers deploy needed \u2014 Pages instead)"
+    },
+    {
+      "id": "OI-6",
+      "item": "User must run Cloudflare deployment steps: Supabase project + schema.sql + seed script + wrangler secrets + npm run deploy (agent has no Cloudflare/Supabase credentials \u2014 MANUAL)",
+      "opened_at": "2026-09-03T21:09:26Z",
+      "resolved_at": "2026-09-07T14:22:20Z",
+      "resolution": "Superseded by backend-free static edition (no CRUD endpoints to abuse; no Supabase/Cloudflare Workers deploy needed \u2014 Pages instead)"
     }
   ]
 }

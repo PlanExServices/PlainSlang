@@ -63,7 +63,20 @@ Set `DATABASE_URL` to a PostgreSQL connection string before starting — a free 
 export DATABASE_URL="postgresql://postgres.<ref>:<password>@aws-0-<region>.pooler.supabase.com:5432/postgres"
 ```
 
-## Deploying
+## Deploying (backend-free static edition — recommended)
+
+The app now ships as a **fully static site** (`site/`) with **zero backend**:
+
+- `site/index.html` — the entire app (SPA), reads `site/data.json`
+- `site/data.json` — all terms + trending verification, regenerated daily
+- `scripts/daily-verify.mjs` — the daily job: rebuilds terms from the seed files, fetches live news feeds, scans 9 Bark/Axis guide pages + 2 index pages for new terms/articles, writes `data.json`
+- `.github/workflows/daily-verify.yml` — GitHub Action running it every morning (6am ET) + on demand (Actions tab → Run workflow)
+
+**Host it on Cloudflare Pages:** dashboard → Workers & Pages → Create → Pages → connect this repo → build command: *(none)* → output directory: `site`. Every daily commit auto-redeploys. GitHub Pages works identically (Settings → Pages → deploy from branch, `/site` folder... use root + `site` via actions or move files). $0/month, no cold starts, nothing to crash.
+
+Saved terms & notes stay in visitors' localStorage. Terms are added by editing the seed files in git (editorial control — consistent with the sourcing policy).
+
+## Deploying (server editions — optional)
 
 Two supported targets — same codebase, the data layer picks its mode from env vars:
 

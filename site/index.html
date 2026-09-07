@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0d12">
+<title>PlainSlang: Parent Guide — Modern Slang in Plain English</title>
+<meta name="description" content="PlainSlang — know what your kids mean. 840+ documented slang terms with published sources: teen and Gen Alpha slang by age group, texting, gaming, coding, corporate, emoji codes, and safety red flags. Trending verified daily against live news.">
+<style>
+:root{--bg:#0b0d12;--bg-elev:#12151d;--bg-card:#161a24;--bg-card-hover:#1b2030;--border:#262c3d;--border-strong:#343c52;--text:#eef1f8;--text-dim:#9aa3b8;--text-faint:#6b7489;--accent:#a78bfa;--accent-strong:#8b5cf6;--green:#4ade80;--amber:#fbbf24;--red:#f87171;--pink:#f472b6;--cyan:#22d3ee;--radius:16px;--radius-sm:10px;--tab-h:64px}
+*{box-sizing:border-box}html{color-scheme:dark}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Inter','Helvetica Neue',Arial,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.5}
+a{color:var(--accent);text-decoration:none}
+.app-frame{max-width:560px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;position:relative}
+@media(min-width:600px){.app-frame{border-left:1px solid var(--border);border-right:1px solid var(--border)}}
+.app-header{position:sticky;top:0;z-index:20;background:rgba(11,13,18,.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:14px 16px 10px}
+.app-title{font-size:22px;font-weight:800;letter-spacing:-.02em;margin:0;display:flex;align-items:center;gap:8px}
+.app-title a{display:inline-flex;align-items:center;gap:8px;color:inherit}
+.logo-badge{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#8b5cf6,#ec4899);display:inline-flex;align-items:center;justify-content:center;font-size:16px;flex:none}
+.app-subtitle{margin:2px 0 0;font-size:12.5px;color:var(--text-dim)}
+.page-body{flex:1;padding:16px 16px calc(var(--tab-h) + 28px)}
+.tab-bar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:560px;height:calc(var(--tab-h) + env(safe-area-inset-bottom,0px));padding-bottom:env(safe-area-inset-bottom,0px);background:rgba(15,17,24,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--border);display:flex;z-index:30}
+.tab-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:10.5px;font-weight:600;color:var(--text-dim);min-height:48px}
+.tab-item .tab-icon{font-size:21px;line-height:1}
+.tab-item.active{color:var(--accent)}
+.search-wrap{position:relative;margin-bottom:12px}
+.search-input{width:100%;background:var(--bg-card);border:1px solid var(--border);border-radius:14px;color:var(--text);font-size:16px;padding:13px 42px;outline:none}
+.search-input:focus{border-color:var(--accent-strong)}
+.search-input::placeholder{color:var(--text-faint)}
+.search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-dim);font-size:16px;pointer-events:none}
+.chip-row{display:flex;gap:8px;overflow-x:auto;padding:2px 0 10px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.chip-row::-webkit-scrollbar{display:none}
+.chip{flex:none;background:var(--bg-card);border:1px solid var(--border);color:var(--text-dim);border-radius:999px;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer;min-height:36px;white-space:nowrap;font-family:inherit}
+.chip.active{background:var(--accent-strong);border-color:var(--accent-strong);color:#fff}
+.card-list{display:flex;flex-direction:column;gap:10px}
+.badge{flex:none;font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:999px;letter-spacing:.02em}
+.badge.trend{background:rgba(244,114,182,.15);color:var(--pink)}
+.badge.woty{background:rgba(251,191,36,.15);color:var(--amber)}
+.badge.age{background:rgba(34,211,238,.12);color:var(--cyan)}
+.badge.alert{background:rgba(248,113,113,.16);color:var(--red);font-size:12px}
+.badge.xlink{background:rgba(139,92,246,.12);color:var(--accent);font-size:12px}
+.meta-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.section-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:12px}
+.section-label{font-size:11px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--text-faint);margin:0 0 6px}
+.section-card p{margin:0;font-size:15px}
+.example-quote{border-left:3px solid var(--accent-strong);padding-left:12px;font-style:italic;color:var(--text-dim)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border-radius:14px;border:1px solid var(--border-strong);background:var(--bg-card);color:var(--text);font-size:15px;font-weight:700;min-height:48px;padding:0 16px;cursor:pointer;font-family:inherit;text-align:center}
+.btn.primary{background:var(--accent-strong);border-color:var(--accent-strong);color:#fff}
+.btn.saved-state{background:rgba(167,139,250,.15);border-color:var(--accent-strong);color:var(--accent)}
+.btn.small{min-height:40px;font-size:13.5px;padding:0 14px;border-radius:11px}
+.btn-row{display:flex;gap:10px;margin:14px 0}
+.btn-row .btn{flex:1}
+.empty-state{text-align:center;padding:48px 24px;color:var(--text-dim)}
+.empty-state .empty-emoji{font-size:44px;margin-bottom:10px}
+.empty-state h3{margin:0 0 6px;color:var(--text);font-size:17px}
+.empty-state p{margin:0;font-size:14px}
+.count-line{font-size:12.5px;color:var(--text-faint);margin:2px 0 10px}
+.link-btn{background:none;border:none;padding:0;color:var(--accent);font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit}
+.letter-header{font-size:14px;font-weight:800;color:var(--accent);letter-spacing:.06em;margin:18px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--border);scroll-margin-top:86px}
+.x-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;scroll-margin-top:96px}
+.x-card.expanded{border-color:var(--accent-strong)}
+.x-card.flash{border-color:var(--pink);animation:flashpulse 1.6s ease}
+@keyframes flashpulse{0%{box-shadow:0 0 0 6px rgba(244,114,182,.45)}100%{box-shadow:0 0 0 0 rgba(244,114,182,0)}}
+.x-card-head{display:flex;align-items:center;gap:10px;width:100%;background:none;border:none;color:var(--text);font-family:inherit;text-align:left;padding:13px 14px;min-height:56px;cursor:pointer}
+.term-emoji{font-size:22px;flex:none}
+.term-name{font-size:17px;font-weight:700;letter-spacing:-.01em}
+.x-card-title{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.x-card-peek{font-size:12.5px;color:var(--text-faint);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.x-chevron{color:var(--text-faint);font-size:14px;transition:transform .2s;flex:none}
+.x-chevron.open{transform:rotate(180deg);color:var(--accent)}
+.x-card-body{padding:0 16px 14px;animation:slidein .18s ease}
+@keyframes slidein{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+.x-def{margin:0;font-size:14.5px}
+.x-say{margin:6px 0 0;font-size:13px;color:var(--text-dim);font-style:italic}
+.x-actions{display:flex;gap:8px;margin-top:12px}
+.tag-pill{display:inline-block;background:var(--bg-elev);border:1px solid var(--border);color:var(--text-dim);font-size:11.5px;padding:3px 9px;border-radius:999px}
+.az-rail{position:fixed;right:max(2px,calc(50% - 278px));top:50%;transform:translateY(-50%);display:flex;flex-direction:column;z-index:24;background:rgba(18,21,29,.75);backdrop-filter:blur(8px);border:1px solid var(--border);border-radius:999px;padding:4px 1px;max-height:72vh;overflow-y:auto;scrollbar-width:none}
+.az-rail::-webkit-scrollbar{display:none}
+.az-letter{background:none;border:none;color:var(--text-dim);font-size:11px;font-weight:800;font-family:inherit;width:36px;min-height:26px;padding:5px 0;cursor:pointer;border-radius:999px;line-height:1;touch-action:manipulation}
+.dice-btn{flex:none;width:50px;background:var(--bg-card);border:1px solid var(--border);border-radius:14px;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.glossary-toolbar{display:flex;gap:8px;margin-bottom:12px;align-items:stretch}
+.glossary-toolbar .search-wrap{flex:1;margin-bottom:0}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.stat-tile{background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--tile,var(--accent));border-radius:var(--radius);padding:14px 14px 12px;display:flex;flex-direction:column;gap:2px;color:var(--text)}
+.stat-num{font-size:30px;font-weight:800;letter-spacing:-.03em;line-height:1.1;color:var(--tile,var(--text))}
+.stat-label{font-size:12.5px;font-weight:600;color:var(--text-dim)}
+.sotd-card{display:block;background:linear-gradient(135deg,rgba(139,92,246,.18),rgba(236,72,153,.14));border:1px solid rgba(167,139,250,.4);border-radius:var(--radius);padding:16px;margin-bottom:12px;color:var(--text)}
+.sotd-kicker{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.sotd-term{font-size:24px;font-weight:800;letter-spacing:-.02em;margin-bottom:4px}
+.sotd-def{margin:0 0 6px;font-size:14.5px;color:var(--text-dim)}
+.sotd-example{margin:0 0 8px;font-size:13.5px;font-style:italic;color:var(--text-faint)}
+.sotd-cta{font-size:13px;font-weight:700;color:var(--accent)}
+.quiz-card{border-color:rgba(167,139,250,.35)}
+.quiz-question{font-size:16px;margin:4px 0 12px}
+.quiz-options{display:flex;flex-direction:column;gap:8px}
+.quiz-option{text-align:left;background:var(--bg-elev);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:14px;font-family:inherit;padding:12px 14px;min-height:48px;cursor:pointer;line-height:1.4}
+.quiz-option.correct{border-color:var(--green);background:rgba(74,222,128,.12)}
+.quiz-option.wrong{border-color:var(--red);background:rgba(248,113,113,.1)}
+.quiz-option.faded{opacity:.45}
+.quiz-option:disabled{cursor:default}
+.quiz-result{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px;font-size:14px;font-weight:600}
+.quiz-score{margin-top:14px;border-top:1px dashed var(--border);padding-top:12px}
+.quiz-score-bar{height:8px;border-radius:999px;background:var(--bg-elev);border:1px solid var(--border);overflow:hidden;margin-bottom:8px}
+.quiz-score-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#8b5cf6,#ec4899);transition:width .4s ease}
+.quiz-score-line{font-size:13.5px;color:var(--text-dim)}
+.quiz-score-line strong{color:var(--text)}
+.bar-chart{display:flex;flex-direction:column;gap:8px}
+.bar-row{display:grid;grid-template-columns:118px 1fr 30px;align-items:center;gap:8px;color:var(--text);min-height:30px}
+.bar-name{font-size:12.5px;font-weight:600;color:var(--text-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar-track{height:14px;background:var(--bg-elev);border-radius:999px;overflow:hidden;border:1px solid var(--border)}
+.bar-fill{display:block;height:100%;border-radius:999px;transition:width .5s ease}
+.bar-count{font-size:12.5px;font-weight:700;text-align:right;color:var(--text-dim)}
+.pack-list{display:flex;flex-direction:column;gap:10px}
+.pack-card{display:flex;align-items:center;gap:12px;background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--pack,var(--accent));border-radius:var(--radius);padding:14px;color:var(--text);min-height:76px}
+.pack-emoji{font-size:30px;flex:none;width:48px;height:48px;display:flex;align-items:center;justify-content:center;background:var(--bg-elev);border-radius:14px}
+.pack-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.pack-title{font-size:16px;font-weight:800;letter-spacing:-.01em}
+.pack-blurb{font-size:12.5px;color:var(--text-dim)}
+.pack-count{flex:none;display:flex;flex-direction:column;align-items:center;font-size:20px;font-weight:800;color:var(--pack,var(--accent));line-height:1.1}
+.pack-count-label{font-size:10px;font-weight:600;color:var(--text-faint)}
+.pack-arrow{color:var(--text-faint);font-size:22px;flex:none}
+.verify-panel{background:var(--bg-elev);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:14px;font-size:13px;color:var(--text-dim)}
+.verify-panel ul{margin:6px 0 0;padding-left:18px}
+.verify-panel li{margin-bottom:4px}
+.verify-summary{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 16px;cursor:pointer;list-style:none;min-height:48px;-webkit-tap-highlight-color:transparent}
+.verify-summary::-webkit-details-marker{display:none}
+.verify-summary-title{font-size:13px;font-weight:700;color:var(--text);flex:none}
+.verify-summary-line{font-size:12px;color:var(--text-dim);flex:1;min-width:0}
+.verify-chevron{color:var(--text-faint);font-size:13px;transition:transform .2s;flex:none}
+details[open]>.verify-summary .verify-chevron{transform:rotate(180deg);color:var(--accent)}
+.verify-body{padding:0 16px 14px;border-top:1px dashed var(--border);padding-top:10px}
+.source-ok{color:var(--green)}
+.source-warn{color:var(--amber)}
+.source-fail{color:var(--red)}
+.evidence-line{margin-top:8px;font-size:12.5px;color:var(--text-faint);border-top:1px dashed var(--border);padding-top:8px}
+.evidence-line strong{color:var(--pink);font-weight:700}
+.safety-note{background:rgba(248,113,113,.07);border:1px solid rgba(248,113,113,.4);border-radius:var(--radius);padding:12px 14px;font-size:13.5px;color:var(--text-dim);margin-bottom:14px;line-height:1.5}
+.safety-note strong{color:var(--text)}
+.safety-note.green{border-color:rgba(52,211,153,.4);background:rgba(52,211,153,.07)}
+.static-note{background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.35);border-radius:var(--radius-sm);padding:10px 14px;font-size:12.5px;color:var(--text-dim);margin-bottom:14px;line-height:1.5}
+.xlink-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:10px;padding-top:10px;border-top:1px dashed var(--border)}
+.xlink-label{font-size:11px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--text-faint)}
+.xlink-chip{display:inline-flex;align-items:center;gap:4px;background:var(--bg-elev);border:1px solid var(--border);color:var(--text-dim);font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;min-height:28px}
+.xlink-chip.here{border-color:var(--accent-strong);color:var(--accent)}
+.back-link{display:inline-flex;align-items:center;gap:6px;color:var(--text-dim);font-size:14px;font-weight:600;margin-bottom:10px;min-height:44px}
+.detail-hero{text-align:center;padding:18px 0 6px}
+.detail-emoji{font-size:52px;line-height:1}
+.detail-term{font-size:30px;font-weight:800;letter-spacing:-.02em;margin:10px 0 2px}
+.detail-say{color:var(--text-dim);font-size:14px;font-style:italic}
+.note-area{width:100%;background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.25);border-radius:var(--radius-sm);color:var(--text);font-size:14.5px;padding:12px 14px;min-height:70px;resize:vertical;outline:none;font-family:inherit}
+.note-area:focus{border-color:var(--amber)}
+.form-hint{font-size:12px;color:var(--text-faint);margin-top:4px}
+.explore-intro{font-size:14px;color:var(--text-dim);margin:2px 0 14px}
+.diff-strip{display:flex;height:18px;border-radius:999px;overflow:hidden;border:1px solid var(--border);margin-bottom:10px}
+.diff-seg{display:block;height:100%}
+.diff-legend{display:flex;flex-wrap:wrap;gap:12px}
+.diff-key{font-size:12.5px;color:var(--text-dim);display:inline-flex;align-items:center;gap:5px;font-weight:600}
+.diff-dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+.explore-teaser{display:block;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:12px;color:var(--text)}
+.explore-teaser-title{font-size:15px;font-weight:800;margin-bottom:4px}
+.explore-teaser-sub{font-size:12.5px;color:var(--text-dim);margin-bottom:10px}
+.explore-teaser-row{display:flex;gap:8px}
+.explore-mini{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;background:var(--bg-elev);border:1px solid var(--border);border-radius:12px;padding:9px 4px;font-size:10.5px;font-weight:700;color:var(--text-dim);text-align:center}
+.explore-mini .mini-emoji{font-size:20px}
+.skeleton{background:linear-gradient(90deg,var(--bg-card) 25%,var(--bg-card-hover) 50%,var(--bg-card) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:var(--radius);border:1px solid var(--border)}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+details summary{cursor:pointer;font-weight:600}
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="app-frame">
+  <header class="app-header">
+    <h1 class="app-title"><a href="#/"><span class="logo-badge">💬</span>PlainSlang</a></h1>
+    <p class="app-subtitle" id="subtitle">Know what your kids mean.</p>
+  </header>
+  <main class="page-body" id="main">
+    <div class="skeleton" style="height:120px;margin-bottom:12px"></div>
+    <div class="skeleton" style="height:86px;margin-bottom:10px"></div>
+    <div class="skeleton" style="height:86px"></div>
+  </main>
+  <nav class="tab-bar" aria-label="Main navigation">
+    <a class="tab-item" data-tab="home" href="#/"><span class="tab-icon">🏠</span>Home</a>
+    <a class="tab-item" data-tab="glossary" href="#/glossary"><span class="tab-icon">📖</span>Glossary</a>
+    <a class="tab-item" data-tab="explore" href="#/explore"><span class="tab-icon">🧭</span>Explore</a>
+    <a class="tab-item" data-tab="trending" href="#/trending"><span class="tab-icon">🔥</span>Trending</a>
+    <a class="tab-item" data-tab="saved" href="#/saved"><span class="tab-icon">🔖</span>Saved</a>
+  </nav>
+</div>
+<script>
+'use strict';
+/* PlainSlang — static edition. Data regenerated daily by GitHub Actions
+   (scripts/daily-verify.mjs): live news verification + guide radar, committed
+   to data.json. No backend. */
+
+const AGE_GROUPS=[
+ {id:'elementary',label:'Elementary',short:'K–5',emoji:'🎒'},
+ {id:'middle',label:'Middle school',short:'6–8',emoji:'📚'},
+ {id:'high_school',label:'High school',short:'9–12',emoji:'🎓'},
+ {id:'college',label:'College',short:'18+',emoji:'🏛️'},
+ {id:'gen_alpha',label:'Gen Alpha core',short:'α',emoji:'🧃'},
+ {id:'gen_z',label:'Gen Z core',short:'Z',emoji:'📱'}];
+const AGE_COLORS={elementary:'#4ade80',middle:'#22d3ee',high_school:'#a78bfa',college:'#f472b6',gen_alpha:'#fbbf24',gen_z:'#f87171'};
+const DIFFS=[{id:'easy',label:'Easy to decode'},{id:'medium',label:'Takes context'},{id:'hard',label:'Genuinely cryptic'}];
+const DIFF_COLORS={easy:'#4ade80',medium:'#fbbf24',hard:'#f87171'};
+const CATEGORIES=[
+ {id:'teen',label:'Teen & Gen Alpha slang',emoji:'🧃',blurb:'The main glossary — what the kids are actually saying.',color:'#a78bfa'},
+ {id:'texting',label:'Texting shorthand',emoji:'📱',blurb:'The acronyms flying around the group chat.',color:'#22d3ee'},
+ {id:'gaming',label:'Gaming slang',emoji:'🎮',blurb:'What they\u2019re shouting into the headset.',color:'#4ade80'},
+ {id:'coding',label:'Coding jargon',emoji:'💻',blurb:'Decode the developers at your dinner table.',color:'#fbbf24'},
+ {id:'corporate',label:'Corporate speak',emoji:'🏢',blurb:'Translate the meeting before the meeting.',color:'#f472b6'},
+ {id:'safety',label:'Red flags & safety',emoji:'⚠️',blurb:'Coded terms that can signal risk — worth a real conversation.',color:'#f87171'},
+ {id:'emoji',label:'Emoji codes',emoji:'🙂',blurb:'What that emoji actually means in a teen\u2019s texts.',color:'#34d399'}];
+const catInfo=id=>CATEGORIES.find(c=>c.id===id)||CATEGORIES[0];
+const ageInfo=id=>AGE_GROUPS.find(g=>g.id===id)||{id,label:id,short:'?',emoji:'❔'};
+const diffInfo=id=>DIFFS.find(d=>d.id===id)||{id,label:id};
+
+let DATA=null, TERMS=[];
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+const LS={saved:'plainslang.saved',notes:'plainslang.notes'};
+(function migrate(){try{
+ for(const [nk,ok] of [[LS.saved,'genadecoder.saved'],[LS.notes,'genadecoder.notes']]){
+  if(!localStorage.getItem(nk)&&localStorage.getItem(ok)){localStorage.setItem(nk,localStorage.getItem(ok));localStorage.removeItem(ok)}
+ }}catch{}})();
+const lsGet=(k,f)=>{try{const r=localStorage.getItem(k);return r?JSON.parse(r):f}catch{return f}};
+const lsSet=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{}};
+const savedIds=()=>lsGet(LS.saved,[]);
+const toggleSaved=id=>{const s=savedIds();const n=s.includes(id)?s.filter(x=>x!==id):[...s,id];lsSet(LS.saved,n);return n.includes(id)};
+const getNote=id=>lsGet(LS.notes,{})[String(id)]||'';
+const setNote=(id,t)=>{const n=lsGet(LS.notes,{});if(t&&t.trim())n[String(id)]=t;else delete n[String(id)];lsSet(LS.notes,n)};
+
+let quizScore={right:0,total:0}, quizQ=null, quizPicked=null;
+const browserState={};
+function inPack(t,cat){return t.category===cat||(t.related||[]).includes(cat)}
+function nyDayOfYear(){const ny=new Date(new Date().toLocaleString('en-US',{timeZone:'America/New_York'}));const s=new Date(ny.getFullYear(),0,0);return Math.floor((ny-s)/86400000)}
+
+function badge(t,curCat){
+ let h='';
+ if((t.tags||[]).includes('parent-alert'))h+='<span class="badge alert" title="Worth a real conversation">⚠️</span>';
+ if(t.isWoty)h+='<span class="badge woty">WOTY</span>';
+ else if(t.trending)h+='<span class="badge trend">🔥</span>';
+ if(curCat&&t.category!==curCat)h+='<span class="badge xlink" title="Home pack: '+esc(catInfo(t.category).label)+'">'+catInfo(t.category).emoji+'</span>';
+ if(curCat==='teen'&&t.category==='teen'){const a=ageInfo(t.ageGroup);h+='<span class="badge age">'+a.emoji+' '+esc(a.short)+'</span>'}
+ return h;
+}
+
+function route(){
+ const hash=location.hash||'#/';
+ const parts=hash.slice(2).split('?')[0].split('/').filter(Boolean);
+ const page=parts[0]||'home';
+ document.querySelectorAll('.tab-item').forEach(el=>{
+  const t=el.dataset.tab;
+  const active=(t==='home'&&page==='home')||(t==='glossary'&&(page==='glossary'||page==='term'))||(t==='explore'&&(page==='explore'||page==='pack'))||(t===page);
+  el.classList.toggle('active',active);
+ });
+ if(!DATA)return;
+ window.scrollTo(0,0);
+ document.querySelectorAll('.az-rail').forEach(e=>e.remove());
+ if(page==='home')renderHome();
+ else if(page==='glossary')renderBrowser('teen');
+ else if(page==='explore')renderExplore();
+ else if(page==='pack')renderPack(parts[1]);
+ else if(page==='trending')renderTrending();
+ else if(page==='saved')renderSaved();
+ else if(page==='term')renderTerm(Number(parts[1]));
+ else renderHome();
+}
+window.addEventListener('hashchange',route);
+const setSub=t=>{$('#subtitle').textContent=t};
+
+function parentRank(p){
+ if(p>=80)return{t:'Certified Rizzler 😎',b:'You could pass as a group-chat member.'};
+ if(p>=60)return{t:'Pretty Based 👌',b:'The kids might actually be impressed.'};
+ if(p>=40)return{t:'Mid… no cap 😬',b:'Respectable, but keep studying.'};
+ if(p>=1)return{t:'Kinda Cheugy 🧀',b:'It\u2019s giving "how do you do, fellow kids."'};
+ return{t:'NPC Energy 🤖',b:'Time to hit the glossary.'};
+}
+function newQuiz(){
+ const teen=TERMS.filter(t=>t.category==='teen');
+ const picks=[];const used=new Set();
+ while(picks.length<3){const t=teen[Math.floor(Math.random()*teen.length)];if(!used.has(t.id)){used.add(t.id);picks.push(t)}}
+ quizQ={q:picks[0],options:[...picks].sort(()=>Math.random()-.5)};
+ quizPicked=null;
+}
+
+function renderHome(){
+ setSub('Know what your kids mean.');
+ const teen=TERMS.filter(t=>t.category==='teen');
+ const trending=TERMS.filter(t=>t.trending);
+ const sotd=teen[nyDayOfYear()%teen.length];
+ const sv=savedIds().length;
+ if(!quizQ)newQuiz();
+ const byAge={};teen.forEach(t=>byAge[t.ageGroup]=(byAge[t.ageGroup]||0)+1);
+ const maxAge=Math.max(...Object.values(byAge),1);
+ const byDiff={};teen.forEach(t=>byDiff[t.difficulty]=(byDiff[t.difficulty]||0)+1);
+ const pct=quizScore.total?Math.round(quizScore.right/quizScore.total*100):0;
+ const rank=parentRank(pct);
+ $('#main').innerHTML=`
+  <div class="stat-grid">
+   <a class="stat-tile" style="--tile:#a78bfa" href="#/glossary"><span class="stat-num">${TERMS.length}</span><span class="stat-label">📖 Terms decoded</span></a>
+   <a class="stat-tile" style="--tile:#f472b6" href="#/trending"><span class="stat-num">${trending.length}</span><span class="stat-label">🔥 Trending today</span></a>
+   <a class="stat-tile" style="--tile:#fbbf24" href="#/saved"><span class="stat-num">${sv}</span><span class="stat-label">🔖 Saved by you</span></a>
+   <a class="stat-tile" style="--tile:#4ade80" href="#/explore"><span class="stat-num">7</span><span class="stat-label">🧭 Jargon worlds</span></a>
+  </div>
+  <a class="sotd-card" href="#/term/${sotd.id}">
+   <div class="sotd-kicker">✨ Slang of the Day</div>
+   <div class="sotd-term">${esc(sotd.emoji||'💬')} ${esc(sotd.term)}</div>
+   <p class="sotd-def">${esc(sotd.definition)}</p>
+   ${sotd.example?`<p class="sotd-example">\u201C${esc(sotd.example)}\u201D</p>`:''}
+   <span class="sotd-cta">Read the full entry →</span>
+  </a>
+  <a class="explore-teaser" href="#/explore">
+   <div class="explore-teaser-title">🧭 Explore other jargon worlds</div>
+   <div class="explore-teaser-sub">Texting, gaming, coding, corporate, safety, emoji — every dialect, decoded.</div>
+   <div class="explore-teaser-row">${CATEGORIES.filter(c=>c.id!=='teen').slice(0,4).map(c=>`<span class="explore-mini"><span class="mini-emoji">${c.emoji}</span>${esc(c.label.split(' ')[0])}</span>`).join('')}</div>
+  </a>
+  <section class="section-card quiz-card">
+   <h3 class="section-label">🎯 Do you speak teen? — pop quiz</h3>
+   <p class="quiz-question">What does <strong>${esc(quizQ.q.emoji)} \u201C${esc(quizQ.q.term)}\u201D</strong> mean?</p>
+   <div class="quiz-options">
+    ${quizQ.options.map(o=>{
+      let cls='quiz-option';
+      if(quizPicked!==null){if(o.id===quizQ.q.id)cls+=' correct';else if(o.id===quizPicked)cls+=' wrong';else cls+=' faded'}
+      return `<button class="${cls}" data-quiz="${o.id}" ${quizPicked!==null?'disabled':''}>${esc(o.definition)}</button>`;
+    }).join('')}
+   </div>
+   ${quizPicked!==null?`
+    <div class="quiz-result">
+     ${quizPicked===quizQ.q.id?'<span class="source-ok">✓ Correct — ate, no crumbs.</span>':'<span class="source-fail">✕ Not quite — that\u2019s cap.</span>'}
+     <button class="btn small primary" id="quiz-next">Next question →</button>
+    </div>`:''}
+   ${quizScore.total>0?`
+    <div class="quiz-score">
+     <div class="quiz-score-bar"><div class="quiz-score-fill" style="width:${pct}%"></div></div>
+     <div class="quiz-score-line">${quizScore.right}/${quizScore.total} correct · <strong>${esc(rank.t)}</strong> <span style="color:var(--text-faint)">${esc(rank.b)}</span></div>
+    </div>`:''}
+  </section>
+  <section class="section-card">
+   <h3 class="section-label">👪 Who says what — teen terms by age group</h3>
+   <div class="bar-chart">
+    ${AGE_GROUPS.map(g=>{const c=byAge[g.id]||0;return `
+     <a class="bar-row" href="#/glossary" data-age="${g.id}">
+      <span class="bar-name">${g.emoji} ${esc(g.label)}</span>
+      <span class="bar-track"><span class="bar-fill" style="width:${Math.max(c/maxAge*100,4)}%;background:${AGE_COLORS[g.id]}"></span></span>
+      <span class="bar-count">${c}</span></a>`}).join('')}
+   </div>
+  </section>
+  <section class="section-card">
+   <h3 class="section-label">🧩 How cryptic is it out there?</h3>
+   <div class="diff-strip">${['easy','medium','hard'].map(k=>`<span class="diff-seg" style="flex:${byDiff[k]||0};background:${DIFF_COLORS[k]}"></span>`).join('')}</div>
+   <div class="diff-legend">${['easy','medium','hard'].map(k=>`<span class="diff-key"><span class="diff-dot" style="background:${DIFF_COLORS[k]}"></span>${k==='easy'?'Easy':k==='medium'?'Medium':'Cryptic'} · ${byDiff[k]||0}</span>`).join('')}</div>
+   <p class="form-hint" style="margin-top:8px">\u201CCryptic\u201D = you would never guess it from context. Looking at you, \u201C6-7.\u201D</p>
+  </section>`;
+ document.querySelectorAll('[data-quiz]').forEach(b=>b.addEventListener('click',()=>{
+  if(quizPicked!==null)return;
+  quizPicked=Number(b.dataset.quiz);
+  quizScore.total++;if(quizPicked===quizQ.q.id)quizScore.right++;
+  renderHome();
+ }));
+ const nx=$('#quiz-next');if(nx)nx.addEventListener('click',()=>{newQuiz();renderHome()});
+ document.querySelectorAll('[data-age]').forEach(a=>a.addEventListener('click',()=>{
+  browserState['teen']={q:'',age:a.dataset.age,diff:'',trend:false,saved:false,expanded:null};
+ }));
+}
+
+function renderBrowser(cat){
+ const info=catInfo(cat);
+ setSub(cat==='teen'?'Teen & Gen Alpha slang, decoded and cited':`${info.emoji} ${info.label} — ${info.blurb}`);
+ const st=browserState[cat]||(browserState[cat]={q:'',age:'',diff:'',trend:false,saved:false,expanded:null});
+ const pool=TERMS.filter(t=>inPack(t,cat));
+ const sv=savedIds();
+ const nq=st.q.trim().toLowerCase();
+ const filtered=pool.filter(t=>{
+  if(st.age&&t.ageGroup!==st.age)return false;
+  if(st.diff&&t.difficulty!==st.diff)return false;
+  if(st.trend&&!t.trending)return false;
+  if(st.saved&&!sv.includes(t.id))return false;
+  if(nq){const hay=(t.term+' '+t.definition+' '+(t.example||'')+' '+(t.tags||[]).join(' ')).toLowerCase();if(!hay.includes(nq))return false}
+  return true;
+ });
+ const groups=new Map();
+ for(const t of filtered){const c=t.term[0].toUpperCase();const k=/[A-Z]/.test(c)?c:'#';if(!groups.has(k))groups.set(k,[]);groups.get(k).push(t)}
+ const letters=[...groups.keys()].sort((a,b)=>a==='#'?-1:b==='#'?1:a.localeCompare(b));
+ const nFilters=[st.age,st.diff,st.trend,st.saved,nq].filter(Boolean).length;
+ let html='';
+ if(cat==='safety')html+=`<div class="safety-note"><strong>⚠️ A note for parents:</strong> seeing one of these terms isn\u2019t proof of anything — context matters, and many double as jokes. Use them as conversation starters, not accusations. Terms marked ⚠️ are the ones Bark and safety experts flag as higher-risk signals.</div>`;
+ if(cat==='emoji')html+=`<div class="safety-note green"><strong>🙂 How to read this:</strong> emojis are context-dependent — a 🍑 in a grocery list is a peach. These are the coded meanings documented by Bark\u2019s and Axis\u2019s emoji guides.</div>`;
+ if(cat!=='teen')html+=`<a class="back-link" href="#/explore">← All jargon worlds</a>`;
+ html+=`
+  <div class="glossary-toolbar">
+   <div class="search-wrap"><span class="search-icon">🔍</span>
+    <input class="search-input" id="bsearch" type="search" placeholder="Type to filter instantly…" value="${esc(st.q)}" aria-label="Search terms">
+   </div>
+   <button class="dice-btn" id="bdice" title="Surprise me" aria-label="Open a random term">🎲</button>
+  </div>`;
+ if(cat==='teen'){
+  html+=`<div class="chip-row" role="group" aria-label="Filter by age group">
+   <button class="chip${st.age===''?' active':''}" data-fage="">All ages</button>
+   ${AGE_GROUPS.map(g=>`<button class="chip${st.age===g.id?' active':''}" data-fage="${g.id}">${g.emoji} ${esc(g.label)}</button>`).join('')}
+  </div>`;
+ }
+ html+=`<div class="chip-row" role="group" aria-label="More filters" style="padding-top:0">
+  ${[['easy','🟢 Easy'],['medium','🟡 Medium'],['hard','🔴 Cryptic']].map(([id,lb])=>`<button class="chip${st.diff===id?' active':''}" data-fdiff="${id}">${lb}</button>`).join('')}
+  ${cat==='teen'?`<button class="chip${st.trend?' active':''}" id="ftrend">🔥 Trending</button>`:''}
+  <button class="chip${st.saved?' active':''}" id="fsaved">🔖 Saved</button>
+ </div>
+ <p class="count-line">${filtered.length} of ${pool.length} terms${nFilters?` · <button class="link-btn" id="fclear">clear filters ✕</button>`:''}</p>`;
+ if(filtered.length===0){
+  html+=`<div class="empty-state"><div class="empty-emoji">🫥</div><h3>No matches</h3><p>Nothing fits those filters.</p><div style="margin-top:14px"><button class="btn small" id="fclear2">Clear filters</button></div></div>`;
+ }else{
+  for(const L of letters){
+   html+=`<h2 class="letter-header" id="letter-${L==='#'?'num':L}">${L}</h2><div class="card-list">`;
+   for(const t of groups.get(L)){
+    const exp=st.expanded===t.id;
+    const saved=sv.includes(t.id);
+    const alsoIn=[t.category,...(t.related||[])].filter((c,i,a)=>a.indexOf(c)===i);
+    html+=`<div class="x-card${exp?' expanded':''}" id="term-${t.id}">
+     <button class="x-card-head" data-expand="${t.id}" aria-expanded="${exp}">
+      <span class="term-emoji">${esc(t.emoji||'💬')}</span>
+      <span class="x-card-title"><span class="term-name">${esc(t.term)}</span>${exp?'':`<span class="x-card-peek">${esc(t.definition)}</span>`}</span>
+      ${badge(t,cat)}<span class="x-chevron${exp?' open':''}">▾</span>
+     </button>
+     ${exp?`<div class="x-card-body">
+      <p class="x-def">${esc(t.definition)}</p>
+      ${t.say?`<p class="x-say">🗣️ say: \u201C${esc(t.say)}\u201D</p>`:''}
+      ${t.example?`<p class="example-quote" style="margin:8px 0">${esc(t.example)}</p>`:''}
+      <div class="meta-row">
+       ${cat==='teen'&&t.category==='teen'?`<span class="badge age">${ageInfo(t.ageGroup).emoji} ${esc(ageInfo(t.ageGroup).label)}</span>`:''}
+       <span class="badge" style="background:rgba(167,139,250,.14);color:var(--accent)">${esc(diffInfo(t.difficulty).label)}</span>
+       ${(t.tags||[]).slice(0,4).map(tag=>`<span class="tag-pill">#${esc(tag)}</span>`).join('')}
+      </div>
+      ${alsoIn.length>1?`<div class="xlink-row"><span class="xlink-label">Lives in:</span>${alsoIn.map(c=>`<a class="xlink-chip${c===cat?' here':''}" href="${c==='teen'?'#/glossary':'#/pack/'+c}">${catInfo(c).emoji} ${esc(catInfo(c).label)}</a>`).join('')}</div>`:''}
+      <div class="x-actions">
+       <button class="btn small${saved?' saved-state':''}" data-save="${t.id}">${saved?'🔖 Saved':'🔖 Save'}</button>
+       <a class="btn small" href="#/term/${t.id}">Full entry + notes →</a>
+      </div>
+     </div>`:''}
+    </div>`;
+   }
+   html+='</div>';
+  }
+ }
+ $('#main').innerHTML=html;
+ document.querySelectorAll('.az-rail').forEach(e=>e.remove());
+ if(letters.length>1){
+  const rail=document.createElement('nav');rail.className='az-rail';rail.setAttribute('aria-label','Jump to letter');
+  rail.innerHTML=letters.map(L=>`<button class="az-letter" data-jump="${L==='#'?'num':L}">${L}</button>`).join('');
+  document.body.appendChild(rail);
+  rail.querySelectorAll('[data-jump]').forEach(b=>b.addEventListener('click',()=>{document.getElementById('letter-'+b.dataset.jump)?.scrollIntoView({behavior:'smooth',block:'start'})}));
+ }
+ const redraw=()=>renderBrowser(cat);
+ $('#bsearch').addEventListener('input',e=>{st.q=e.target.value;clearTimeout(st._t);st._t=setTimeout(()=>{const pos=e.target.selectionStart;redraw();const el=$('#bsearch');el.focus();el.setSelectionRange(pos,pos)},200)});
+ $('#bdice').addEventListener('click',()=>{
+  if(!filtered.length)return;
+  const pick=filtered[Math.floor(Math.random()*filtered.length)];
+  st.expanded=pick.id;redraw();
+  requestAnimationFrame(()=>{const el=document.getElementById('term-'+pick.id);if(el){el.classList.add('flash');el.scrollIntoView({behavior:'smooth',block:'center'})}});
+ });
+ document.querySelectorAll('[data-fage]').forEach(b=>b.addEventListener('click',()=>{st.age=st.age===b.dataset.fage?'':b.dataset.fage;redraw()}));
+ document.querySelectorAll('[data-fdiff]').forEach(b=>b.addEventListener('click',()=>{st.diff=st.diff===b.dataset.fdiff?'':b.dataset.fdiff;redraw()}));
+ const ft=$('#ftrend');if(ft)ft.addEventListener('click',()=>{st.trend=!st.trend;redraw()});
+ const fsv=$('#fsaved');if(fsv)fsv.addEventListener('click',()=>{st.saved=!st.saved;redraw()});
+ ['fclear','fclear2'].forEach(id=>{const el=document.getElementById(id);if(el)el.addEventListener('click',()=>{browserState[cat]={q:'',age:'',diff:'',trend:false,saved:false,expanded:null};redraw()})});
+ document.querySelectorAll('[data-expand]').forEach(b=>b.addEventListener('click',()=>{const id=Number(b.dataset.expand);st.expanded=st.expanded===id?null:id;redraw()}));
+ document.querySelectorAll('[data-save]').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();toggleSaved(Number(b.dataset.save));redraw()}));
+}
+
+function renderExplore(){
+ setSub('Every dialect of the internet, one decoder');
+ const counts={};TERMS.forEach(t=>{counts[t.category]=(counts[t.category]||0)+1;(t.related||[]).forEach(r=>counts[r]=(counts[r]||0)+1)});
+ $('#main').innerHTML=`
+  <p class="explore-intro">Teen slang is just the beginning. Pick a jargon world to decode — every entry cites a published reference.</p>
+  <div class="pack-list">
+   ${CATEGORIES.map(c=>`
+    <a class="pack-card" style="--pack:${c.color}" href="${c.id==='teen'?'#/glossary':'#/pack/'+c.id}">
+     <span class="pack-emoji">${c.emoji}</span>
+     <span class="pack-info"><span class="pack-title">${esc(c.label)}</span><span class="pack-blurb">${esc(c.blurb)}</span></span>
+     <span class="pack-count">${counts[c.id]||0}<span class="pack-count-label">terms</span></span>
+     <span class="pack-arrow">›</span>
+    </a>`).join('')}
+  </div>`;
+}
+function renderPack(id){
+ const cat=CATEGORIES.find(c=>c.id===id&&c.id!=='teen');
+ if(!cat){setSub('Unknown pack');$('#main').innerHTML=`<a class="back-link" href="#/explore">← Back to Explore</a><div class="empty-state"><div class="empty-emoji">🗺️</div><h3>Unknown pack</h3></div>`;return}
+ renderBrowser(cat.id);
+}
+
+function renderTrending(){
+ setSub('Verified daily against live news — we don\u2019t invent what\u2019s hot');
+ const snap=DATA.trendingSnapshot;
+ const radar=DATA.radarSnapshot;
+ const trending=TERMS.filter(t=>t.trending).sort((a,b)=>(b.isWoty-a.isWoty)||a.term.localeCompare(b.term));
+ const feedOk=(snap?.sourcesChecked||[]).filter(s=>s.ok).length;
+ const guideOk=(radar?.results||[]).filter(r=>r.ok).length;
+ const total=(snap?.sourcesChecked||[]).length+(radar?.results||[]).length;
+ const candidates=(radar?.results||[]).filter(r=>r.ok).flatMap(r=>r.newCandidates.map(t=>({t,s:r.source})));
+ const newGuides=(radar?.discovery||[]).filter(d=>d.ok).flatMap(d=>d.newGuideUrls);
+ $('#main').innerHTML=`
+  <details class="verify-panel">
+   <summary class="verify-summary">
+    <span class="verify-summary-title">🛡️ Daily verification</span>
+    <span class="verify-summary-line">${snap?`${feedOk+guideOk===total?'✓':'⚠'} ${feedOk+guideOk}/${total} sources · ${snap.matchedCount} headline match${snap.matchedCount===1?'':'es'} · ${new Date(DATA.generatedAt).toLocaleDateString('en-US',{timeZone:'America/New_York',month:'short',day:'numeric'})}${newGuides.length?` · 🆕 ${newGuides.length} new guide`:''}${candidates.length?` · ${candidates.length} candidates`:''}`:'no data'}</span>
+    <span class="verify-chevron">▾</span>
+   </summary>
+   <div class="verify-body">
+    <div class="static-note">📅 Rebuilt daily by an automated job (GitHub Actions) that fetches live news feeds and re-scans the Bark/Axis parent guides, then republishes this site. Generated: <strong>${new Date(DATA.generatedAt).toLocaleString('en-US',{timeZone:'America/New_York'})} ET</strong></div>
+    ${snap?`
+    <div>News-feed verification · ${snap.matchedCount} headline match${snap.matchedCount===1?'':'es'}</div>
+    <ul>${snap.sourcesChecked.map(s=>`<li>${s.ok?`<span class="source-ok">✓ ${esc(s.name)} — ${s.items} items read</span>`:`<span class="source-fail">✕ ${esc(s.name)} — ${esc(s.error)}</span>`}</li>`).join('')}</ul>
+    ${snap.wiktionarySample?.length?`<div style="margin-top:6px">Wiktionary spot-check: ${snap.wiktionarySample.map(w=>`${esc(w.term)} ${w.confirmed===true?'✓':w.confirmed===false?'—':'?'}`).join(' · ')}</div>`:''}
+    ${snap.headlinesSample?.length?`<details style="margin-top:8px"><summary>Headlines checked (${snap.headlinesSample.length} shown)</summary><ul>${snap.headlinesSample.map(h=>`<li>${h.link?`<a href="${esc(h.link)}" target="_blank" rel="noopener noreferrer">${esc(h.title)}</a>`:esc(h.title)}</li>`).join('')}</ul></details>`:''}`:''}
+    ${radar?`
+    <div style="border-top:1px dashed var(--border);margin-top:10px;padding-top:10px">📡 Guide radar — ${radar.results.length} watched sources</div>
+    <ul>${radar.results.map(r=>`<li>${r.ok?`<span class="source-ok">✓ ${esc(r.source)} — ${r.scanned} terms, ${r.newCandidates.length===0?'library current':r.newCandidates.length+' new candidate(s)'}</span>`:`<span class="source-fail">✕ ${esc(r.source)} — ${esc(r.error)}</span>`}</li>`).join('')}</ul>
+    ${candidates.length?`<details style="margin-top:6px"><summary>New term candidates (review-only — definitions are never auto-written)</summary><ul>${candidates.map(c=>`<li>\u201C${esc(c.t)}\u201D <em style="color:var(--text-faint)">(${esc(c.s)})</em></li>`).join('')}</ul></details>`:''}
+    <div style="border-top:1px dashed var(--border);margin-top:10px;padding-top:10px">🔭 New-guide discovery</div>
+    <ul>${radar.discovery.map(d=>`<li>${d.ok?`<span class="${d.newGuideUrls.length?'source-warn':'source-ok'}">${d.newGuideUrls.length?'🆕':'✓'} ${esc(d.index)} — ${d.linksScanned} links${d.newGuideUrls.length?', '+d.newGuideUrls.length+' possible new guide(s)':''}</span>`:`<span class="source-fail">✕ ${esc(d.index)} — ${esc(d.error)}</span>`}</li>`).join('')}</ul>
+    ${newGuides.length?`<ul>${newGuides.map(u=>`<li><a href="${esc(u)}" target="_blank" rel="noopener noreferrer">${esc(u)}</a></li>`).join('')}</ul>`:''}`:''}
+   </div>
+  </details>
+  <p class="count-line">${trending.length} trending term${trending.length===1?'':'s'}</p>
+  <div class="card-list">
+   ${trending.map(t=>`
+    <a class="x-card" href="#/term/${t.id}" style="display:block">
+     <span class="x-card-head" style="cursor:pointer">
+      <span class="term-emoji">${esc(t.emoji||'💬')}</span>
+      <span class="x-card-title"><span class="term-name">${esc(t.term)}</span><span class="x-card-peek">${esc(t.definition)}</span></span>
+      ${t.isWoty?'<span class="badge woty">WOTY</span>':'<span class="badge trend">🔥</span>'}
+     </span>
+    </a>
+    ${t.trendingEvidence?.headline?`<p class="evidence-line" style="padding:0 4px">📰 <strong>Evidence:</strong> \u201C${esc(t.trendingEvidence.headline)}\u201D <em>(${esc(t.trendingEvidence.feed||'')})</em></p>`:''}
+   `).join('')}
+  </div>`;
+}
+
+function renderSaved(){
+ setSub('Your bookmarks & notes — stored in this browser only');
+ const ids=savedIds();
+ const byId=new Map(TERMS.map(t=>[t.id,t]));
+ const terms=ids.map(id=>byId.get(id)).filter(Boolean);
+ const notes=lsGet(LS.notes,{});
+ if(terms.length===0){
+  $('#main').innerHTML=`<div class="empty-state"><div class="empty-emoji">🔖</div><h3>Nothing saved yet</h3><p>Tap \u201CSave\u201D on any term to keep it here. Saved terms and notes never leave this browser.</p><div style="margin-top:14px"><a class="btn small primary" href="#/glossary" style="display:inline-flex">Browse the glossary</a></div></div>`;
+  return;
+ }
+ $('#main').innerHTML=`
+  <p class="count-line">${terms.length} saved term${terms.length===1?'':'s'}</p>
+  <div class="card-list">
+   ${terms.map(t=>`
+    <a class="x-card" href="#/term/${t.id}" style="display:block">
+     <span class="x-card-head" style="cursor:pointer">
+      <span class="term-emoji">${esc(t.emoji||'💬')}</span>
+      <span class="x-card-title"><span class="term-name">${esc(t.term)}</span><span class="x-card-peek">${esc(t.definition)}</span></span>
+      ${badge(t,null)}
+     </span>
+    </a>
+    ${notes[String(t.id)]?`<p class="evidence-line" style="padding:0 4px">📝 <strong style="color:var(--amber)">Your note:</strong> ${esc(notes[String(t.id)])}</p>`:''}
+   `).join('')}
+  </div>`;
+}
+
+function renderTerm(id){
+ const t=TERMS.find(x=>x.id===id);
+ if(!t){$('#main').innerHTML=`<a class="back-link" href="#/glossary">← Back to glossary</a><div class="empty-state"><div class="empty-emoji">🫥</div><h3>Term not found</h3></div>`;return}
+ const isTeen=t.category==='teen';
+ const back=isTeen?'#/glossary':'#/pack/'+t.category;
+ setSub(isTeen?`Filed under ${ageInfo(t.ageGroup).label}`:'From the jargon packs');
+ const saved=savedIds().includes(t.id);
+ const alsoIn=[t.category,...(t.related||[])].filter((c,i,a)=>a.indexOf(c)===i);
+ $('#main').innerHTML=`
+  <a class="back-link" href="${back}">← Back to ${isTeen?'glossary':'the pack'}</a>
+  <div class="detail-hero">
+   <div class="detail-emoji">${esc(t.emoji||'💬')}</div>
+   <h2 class="detail-term">${esc(t.term)}</h2>
+   ${t.say?`<p class="detail-say">say: \u201C${esc(t.say)}\u201D</p>`:''}
+   <div class="meta-row" style="justify-content:center">
+    ${isTeen?`<span class="badge age">${ageInfo(t.ageGroup).emoji} ${esc(ageInfo(t.ageGroup).label)}</span>`:''}
+    <span class="badge" style="background:rgba(167,139,250,.14);color:var(--accent)">${esc(diffInfo(t.difficulty).label)}</span>
+    ${t.isWoty?'<span class="badge woty">🏆 Word of the Year</span>':''}
+    ${t.trending?'<span class="badge trend">🔥 Trending</span>':''}
+    ${(t.tags||[]).includes('parent-alert')?'<span class="badge alert">⚠️ Parent alert</span>':''}
+   </div>
+   ${alsoIn.length>1?`<div class="xlink-row" style="justify-content:center;border-top:none;padding-top:4px"><span class="xlink-label">Lives in:</span>${alsoIn.map(c=>`<a class="xlink-chip" href="${c==='teen'?'#/glossary':'#/pack/'+c}">${catInfo(c).emoji} ${esc(catInfo(c).label)}</a>`).join('')}</div>`:''}
+  </div>
+  <div class="btn-row">
+   <button class="btn${saved?' saved-state':''}" id="dsave">${saved?'🔖 Saved':'🔖 Save'}</button>
+  </div>
+  <section class="section-card"><h3 class="section-label">What it means</h3><p>${esc(t.definition)}</p></section>
+  ${t.example?`<section class="section-card"><h3 class="section-label">Heard in the wild</h3><p class="example-quote">${esc(t.example)}</p></section>`:''}
+  ${t.notes?`<section class="section-card"><h3 class="section-label">Origin & notes</h3><p>${esc(t.notes)}</p></section>`:''}
+  ${t.trending&&t.trendingEvidence?`<section class="section-card"><h3 class="section-label">Why it\u2019s marked trending</h3><p style="font-size:14px"><strong style="color:var(--pink)">\u201C${esc(t.trendingEvidence.headline)}\u201D</strong></p><p style="font-size:12.5px;color:var(--text-faint);margin-top:6px">Source feed: ${esc(t.trendingEvidence.feed||'')}${t.trendingEvidence.link?` · <a href="${esc(t.trendingEvidence.link)}" target="_blank" rel="noopener noreferrer">read the story ↗</a>`:''}</p></section>`:''}
+  ${t.sourceName||t.sourceUrl?`<section class="section-card"><h3 class="section-label">Documented source</h3><p style="font-size:14px">${t.sourceUrl?`<a href="${esc(t.sourceUrl)}" target="_blank" rel="noopener noreferrer">${esc(t.sourceName||t.sourceUrl)} ↗</a>`:esc(t.sourceName)}</p></section>`:''}
+  ${(t.tags||[]).length?`<section class="section-card"><h3 class="section-label">Tags</h3><div>${t.tags.map(tag=>`<span class="tag-pill" style="margin:0 4px 4px 0">#${esc(tag)}</span>`).join('')}</div></section>`:''}
+  <section class="section-card">
+   <h3 class="section-label">My private note</h3>
+   <textarea class="note-area" id="dnote" placeholder="e.g. \u201CMaya said this at dinner — she says it\u2019s ironic now.\u201D Stays in this browser only.">${esc(getNote(t.id))}</textarea>
+   <p class="form-hint" id="dnote-status"></p>
+  </section>`;
+ $('#dsave').addEventListener('click',()=>{toggleSaved(t.id);renderTerm(id)});
+ let nt;$('#dnote').addEventListener('input',e=>{
+  $('#dnote-status').textContent='Saving…';clearTimeout(nt);
+  nt=setTimeout(()=>{setNote(t.id,e.target.value);$('#dnote-status').textContent='Saved to this browser ✓';setTimeout(()=>{$('#dnote-status').textContent=''},2000)},500);
+ });
+}
+
+fetch('data.json').then(r=>{
+ if(!r.ok)throw new Error('HTTP '+r.status);
+ return r.json();
+}).then(d=>{DATA=d;TERMS=d.terms;route()}).catch(e=>{
+ $('#main').innerHTML=`<div class="empty-state"><div class="empty-emoji">😵</div><h3>Couldn\u2019t load the glossary data</h3><p>${esc(String(e.message||e))} — data.json must sit next to index.html.</p><div style="margin-top:14px"><button class="btn small primary" onclick="location.reload()">↻ Retry</button></div></div>`;
+});
+</script>
+</body>
+</html>
