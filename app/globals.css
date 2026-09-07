@@ -77,11 +77,11 @@ a { color: var(--accent); text-decoration: none; }
 .app-title .logo-badge {
   width: 30px; height: 30px;
   border-radius: 9px;
-  background: linear-gradient(135deg, #8b5cf6, #ec4899);
   display: inline-flex; align-items: center; justify-content: center;
-  font-size: 16px;
   flex: none;
+  overflow: hidden;
 }
+.app-title .logo-badge img { width: 100%; height: 100%; display: block; }
 
 .app-subtitle {
   margin: 2px 0 0;
@@ -325,6 +325,34 @@ a { color: var(--accent); text-decoration: none; }
 .empty-state .empty-emoji { font-size: 44px; margin-bottom: 10px; }
 .empty-state h3 { margin: 0 0 6px; color: var(--text); font-size: 17px; }
 .empty-state p { margin: 0; font-size: 14px; }
+
+/* ---- Tip jar (web editions only; header top-right) ---- */
+.tip-jar-btn {
+  position: absolute; top: 12px; right: 14px; width: 44px; height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--bg-elev); border: 1px solid var(--border); border-radius: 50%;
+  cursor: pointer; transition: border-color .15s, transform .15s; z-index: 25;
+}
+.tip-jar-btn:hover { border-color: #f472b6; transform: translateY(-1px); }
+.tip-jar-btn[aria-expanded="true"] { border-color: #f472b6; }
+.tip-jar-emoji { font-size: 22px; line-height: 1; }
+.tip-jar-svg { display: block; }
+.tip-pop {
+  position: absolute; top: 62px; right: 10px; width: min(300px, calc(100vw - 20px));
+  background: var(--bg-card); border: 1px solid #f472b666; border-radius: var(--radius);
+  padding: 14px; box-shadow: 0 12px 32px rgba(0, 0, 0, .5); z-index: 30;
+}
+.tip-pop-head { font-size: 14px; font-weight: 800; margin-bottom: 6px; }
+.tip-blurb { font-size: 12.5px; color: var(--text-dim); line-height: 1.5; margin: 0 0 10px; }
+.bmc-link {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  background: #FFDD00; color: #0D0C22;
+  border-radius: 12px; padding: 12px 16px; min-height: 44px;
+  text-decoration: none; font-weight: 800; font-size: 14.5px;
+  transition: transform .15s, box-shadow .15s;
+}
+.bmc-link:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(255, 221, 0, .25); }
+.bmc-link svg { flex: none; }
 
 .skeleton {
   background: linear-gradient(90deg, var(--bg-card) 25%, var(--bg-card-hover) 50%, var(--bg-card) 75%);

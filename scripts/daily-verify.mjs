@@ -22,6 +22,7 @@ import { PACK_TERMS_V6 } from '../lib/packs-v6.js';
 import { PACK_TERMS_V7 } from '../lib/packs-v7.js';
 import { PACK_TERMS_V8 } from '../lib/packs-v8.js';
 import { PACK_TERMS_V9 } from '../lib/packs-v9.js';
+import { PACK_TERMS_V10, QUSTODIO_CITATIONS } from '../lib/packs-v10.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const OUT = path.join(__dirname, '..', 'site', 'data.json');
@@ -117,11 +118,24 @@ function buildTerms() {
   }
 
   // v5–v9: collision -> cross-link
-  for (const wave of [PACK_TERMS_V5, PACK_TERMS_V6, PACK_TERMS_V7, PACK_TERMS_V8, PACK_TERMS_V9]) {
+  for (const wave of [PACK_TERMS_V5, PACK_TERMS_V6, PACK_TERMS_V7, PACK_TERMS_V8, PACK_TERMS_V9, PACK_TERMS_V10]) {
     for (const r of wave) {
       const existing = byKey().get(r.term.toLowerCase());
       if (existing) crossLink(existing, r.category);
       else push({ ...r, isWoty: false });
+    }
+  }
+
+  // v10 cross-citations: existing terms Qustodio also documents get an
+  // "Also documented by" line appended to notes (original source stays primary).
+  {
+    const map = byKey();
+    for (const [term, src] of Object.entries(QUSTODIO_CITATIONS)) {
+      const row = map.get(term.toLowerCase());
+      if (!row) continue;
+      const line = `Also documented by ${src.sourceName} (${src.sourceUrl}).`;
+      if (row.notes && row.notes.includes(src.sourceUrl)) continue;
+      row.notes = row.notes ? `${row.notes} ${line}` : line;
     }
   }
 
@@ -215,6 +229,22 @@ function barkExtract(html) {
   while ((m = re.exec(html)) !== null) { const t = cleanTerm(m[1]); if (t) found.add(t); }
   return [...found];
 }
+function qustodioExtract(html) {
+  // Qustodio glossary entries are "<b>Term</b> &#8211; definition" or
+  // "<b>Term &#8211; </b>" — the dash requirement filters out nav junk,
+  // headings, and numbered how-to steps. Plain-text "TERM &#8211; meaning"
+  // lines (internet-speak guide) are matched too.
+  const found = new Set();
+  let m;
+  const re1 = /<b>\s*([^<>]{1,40}?)\s*(?:&#8211;|\u2013|\u2014|-)\s*<\/b>/gi;
+  while ((m = re1.exec(html)) !== null) { const t = cleanTerm(m[1]); if (t) found.add(t); }
+  const re2 = /<b>\s*([^<>]{1,40}?)\s*<\/b>\s*(?:<span[^>]*>)?\s*(?:&#8211;|\u2013|\u2014)/gi;
+  while ((m = re2.exec(html)) !== null) { const t = cleanTerm(m[1]); if (t) found.add(t); }
+  const re3 = /(?:<br\s*\/?\s*>|&#8211;|\u2013)\s*([A-Z][A-Z0-9]{2,10})\s*(?:&#8211;|\u2013)\s+[A-Z]/g;
+  while ((m = re3.exec(html)) !== null) { const t = cleanTerm(m[1]); if (t) found.add(t); }
+  return [...found];
+}
+
 function axisExtract(html) {
   const found = new Set();
   let m;
@@ -237,6 +267,10 @@ const RADAR_SOURCES = [
   { name: 'Axis — Parent\u2019s Guide to Emoji', url: 'https://axis.org/resource/a-parent-guide-to-emoji/', extract: axisExtract },
   { name: 'Axis — Teen Slang, Back-to-School Edition', url: 'https://axis.org/resource/a-parents-guide-to-teen-slang-back-to-school-edition/', extract: axisExtract },
   { name: 'Axis — A Parent\u2019s Guide to Teen Slang', url: 'https://axis.org/resource/a-parent-guide-to-teen-slang/', extract: axisExtract },
+  { name: 'Qustodio — Looksmaxxing Guide', url: 'https://www.qustodio.com/en/blog/what-is-looksmaxxing/', extract: qustodioExtract },
+  { name: 'Qustodio — Manosphere Guide', url: 'https://www.qustodio.com/en/blog/what-is-the-manosphere/', extract: qustodioExtract },
+  { name: 'Qustodio — Brain Rot Guide', url: 'https://www.qustodio.com/en/blog/what-is-brain-rot-a-parents-guide/', extract: qustodioExtract },
+  { name: 'Qustodio — Internet Speak Lingo', url: 'https://www.qustodio.com/en/blog/internet-speak-do-you-know-the-lingo-to-keep-your-kids-safe/', extract: qustodioExtract },
 ];
 
 const ALIASES = [
@@ -265,8 +299,9 @@ const ALIASES = [
 const DISCOVERY_SOURCES = [
   { name: 'Bark blog index', url: 'https://www.bark.us/blog/', linkRe: 'href="(https:\\/\\/www\\.bark\\.us\\/blog\\/[a-z0-9-]+\\/)"' },
   { name: 'Axis cultural-issues index', url: 'https://axis.org/parenting-theme/cultural-issues/', linkRe: 'href="(https:\\/\\/axis\\.org\\/resource\\/[a-z0-9-]+\\/)"' },
+  { name: 'Qustodio blog index', url: 'https://www.qustodio.com/en/blog/', linkRe: 'href="(https:\\/\\/www\\.qustodio\\.com\\/en\\/blog\\/[a-z0-9-]+\\/)"' },
 ];
-const GUIDE_HINT = /slang|emoji|terms|codes|acronym|dictionary|glossary|speak|lingo|jargon|texting/i;
+const GUIDE_HINT = /slang|emoji|terms|codes|acronym|dictionary|glossary|speak|lingo|jargon|texting|brain-rot|looksmax|manosphere|sigma|skibidi/i;
 const KNOWN_GUIDE_URLS = new Set(RADAR_SOURCES.map((s) => s.url));
 
 async function runRadar(terms) {
